@@ -3,22 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>おすすめさくらんぼ診断</title>
+  <title>おすすめさくらんぼ診断（完成版）</title>
+
+  <!-- GA4設定: ご自身の測定IDに置き換えてください -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
+
   <style>
     :root {
-      --crimson: #BE2E46;
-      --crimson-dark: #9f2238;
-      --crimson-light: #fdecef;
-      --crimson-soft: #f5d7de;
-      --green: #1E3F30;
-      --green-light: #edf6f0;
-      --green-soft: #dcebe1;
-      --ivory: #f8f5f1;
-      --paper: #ffffff;
-      --text: #2d2d2d;
+      --berry: #D85A7B;
+      --berry-dark: #B54366;
+      --berry-light: #FFF0F4;
+      --berry-soft: #F5D6DF;
+      --mint: #3FAF91;
+      --mint-dark: #2E8C73;
+      --mint-light: #EFFAF6;
+      --mint-soft: #D8F0E7;
+      --ivory: #FFFCF8;
+      --paper: #FFFFFF;
+      --text: #2D2D2D;
       --subtext: #666666;
-      --line: #e8dfdb;
-      --shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+      --line: #E7DEDA;
+      --shadow: 0 14px 34px rgba(181,67,102,0.10), 0 10px 22px rgba(63,175,145,0.08);
       --radius-xl: 28px;
       --radius-lg: 22px;
     }
@@ -28,67 +39,151 @@
       font-family: "Hiragino Maru Gothic ProN", "Yu Gothic UI", "Yu Gothic", Meiryo, sans-serif;
       color: var(--text);
       background:
-        radial-gradient(circle at top right, rgba(190,46,70,0.10), transparent 24%),
-        radial-gradient(circle at top left, rgba(30,63,48,0.10), transparent 24%),
-        linear-gradient(180deg, #fff3f5 0px, #f2f8f4 230px, var(--ivory) 430px);
+        radial-gradient(circle at top right, rgba(216,90,123,0.11), transparent 24%),
+        radial-gradient(circle at top left, rgba(63,175,145,0.10), transparent 24%),
+        linear-gradient(180deg, #FFF7FA 0px, #F4FBF8 230px, var(--ivory) 430px);
     }
     .app { max-width: 440px; margin: 0 auto; min-height: 100vh; }
     .header {
       position: sticky; top: 0; z-index: 20; padding: 14px 16px 12px;
-      background: rgba(255,255,255,0.94); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line);
     }
     .badge {
-      display: inline-flex; align-items: center; padding: 7px 12px; border-radius: 999px;
-      background: linear-gradient(135deg, var(--green-light), #f8fcf9); border: 1px solid var(--green-soft);
-      color: var(--green); font-size: 12px; font-weight: 800; margin-bottom: 8px;
+      display: inline-flex; align-items: center; gap: 8px; padding: 7px 12px; border-radius: 999px;
+      background: linear-gradient(135deg, var(--mint-light), #FAFFFD); border: 1px solid var(--mint-soft);
+      color: var(--mint-dark); font-size: 12px; font-weight: 800; margin-bottom: 8px;
     }
-    .title { margin: 0; font-size: 22px; font-weight: 900; color: var(--green); }
+    .title { margin: 0; font-size: 22px; font-weight: 900; color: var(--mint-dark); }
     .subtitle { margin: 6px 0 0; color: var(--subtext); font-size: 13px; line-height: 1.8; }
     .content { padding: 16px; padding-bottom: 40px; }
+
     .screen { display: none; }
     .screen.active { display: block; }
-    .card { background: var(--paper); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 14px; box-shadow: var(--shadow); }
-    .hero { background: linear-gradient(135deg, var(--crimson), #d6536b 70%); color: white; border-radius: var(--radius-xl); padding: 20px; }
+    .card {
+      background: var(--paper); border-radius: 24px; padding: 16px; margin-bottom: 14px; box-shadow: var(--shadow);
+    }
+    .hero {
+      background: linear-gradient(135deg, var(--berry), #F08AA3 72%);
+      color: white; border-radius: 30px; padding: 20px; position: relative; overflow: hidden;
+    }
+    .hero::after {
+      content: ""; position: absolute; right: -18px; top: -18px; width: 118px; height: 118px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.22), transparent 72%);
+    }
+    .hero-row { display: flex; justify-content: space-between; gap: 14px; align-items: flex-start; position: relative; z-index: 1; }
     .hero h2 { margin: 0 0 8px; font-size: 21px; color: white; }
     .hero p { margin: 0; font-size: 13px; line-height: 1.9; }
-    .section-title { margin: 0 0 10px; font-size: 18px; font-weight: 900; color: var(--green); }
+    .hero-ico { width: 86px; min-width: 86px; height: 86px; display: flex; align-items: center; justify-content: center; }
+
+    .section-title { margin: 0 0 10px; font-size: 18px; font-weight: 900; color: var(--mint-dark); display: flex; align-items: center; gap: 8px; }
     .lead { color: var(--subtext); font-size: 13px; line-height: 1.85; margin: 0 0 12px; }
     .question { margin-bottom: 18px; }
-    .question-title { font-size: 15px; font-weight: 900; margin-bottom: 10px; color: var(--green); }
-    .choice { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; padding: 12px 13px; background: #fffdfc; border: 1px solid var(--line); border-radius: 16px; cursor: pointer; }
-    .choice input { accent-color: var(--crimson); transform: scale(1.08); }
+    .question-title { font-size: 15px; font-weight: 900; margin-bottom: 10px; color: var(--mint-dark); }
+    .choice {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 8px; padding: 12px 13px;
+      background: #FFFDFE; border: 1px solid var(--line); border-radius: 16px; cursor: pointer;
+    }
+    .choice input { accent-color: var(--berry); transform: scale(1.08); }
     .choice span { font-size: 14px; line-height: 1.6; font-weight: 600; }
+
     .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
-    button, a.link-btn { border: none; border-radius: 16px; padding: 13px 16px; min-height: 48px; font-size: 14px; font-weight: 900; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; text-align: center; text-decoration: none; }
+    button, a.link-btn {
+      border: none; border-radius: 16px; padding: 13px 16px; min-height: 48px; font-size: 14px; font-weight: 900;
+      cursor: pointer; display: inline-flex; align-items: center; justify-content: center; text-align: center; text-decoration: none;
+    }
     button { flex: 1; }
-    .btn-primary { background: linear-gradient(135deg, var(--crimson), #d14a61); color: white; }
-    .btn-secondary { background: linear-gradient(135deg, var(--green), #2d5845); color: white; }
-    .btn-outline { background: white; border: 1px solid var(--line); color: var(--green); }
-    .btn-soft-green { background: linear-gradient(135deg, var(--green-light), #f8fcf9); color: var(--green); border: 1px solid var(--green-soft); width: 100%; margin-top: 10px; }
-    .btn-soft-red { background: linear-gradient(135deg, var(--crimson-light), #fff7f8); color: var(--crimson); border: 1px solid var(--crimson-soft); width: 100%; }
-    .error { display: none; background: var(--crimson-light); color: var(--crimson); border: 1px solid var(--crimson-soft); border-radius: 14px; padding: 10px 12px; margin-bottom: 12px; font-size: 13px; line-height: 1.7; font-weight: 800; }
-    .result-box { background: linear-gradient(135deg, #fff8f9, #ffffff); border: 1px solid #efd5da; }
-    .result-name { font-size: 25px; font-weight: 900; color: var(--crimson); margin: 8px 0; }
-    .fruit-photo { width: 100%; height: 220px; object-fit: cover; border-radius: 18px; display: block; margin-bottom: 14px; box-shadow: 0 8px 20px rgba(0,0,0,0.08); background: linear-gradient(135deg, #fff0f4, #f2f8f4); }
-    .fruit-thumb { width: 76px; min-width: 76px; height: 76px; object-fit: cover; border-radius: 18px; display: block; background: linear-gradient(135deg, #fff0f4, #f2f8f4); box-shadow: 0 6px 16px rgba(0,0,0,0.06); }
-    .tags span { display: inline-block; background: var(--green-light); color: var(--green); border-radius: 999px; padding: 6px 10px; margin-right: 6px; margin-top: 6px; font-size: 12px; font-weight: 900; }
-    .card-list-item { background: var(--paper); border-radius: var(--radius-lg); padding: 14px; margin-bottom: 12px; box-shadow: var(--shadow); }
+    .btn-primary { background: linear-gradient(135deg, var(--berry), #EE8EA8); color: white; }
+    .btn-secondary { background: linear-gradient(135deg, var(--mint), #70D0B5); color: white; }
+    .btn-outline { background: white; border: 1px solid var(--line); color: var(--mint-dark); }
+
+    .btn-soft-green {
+      background: linear-gradient(135deg, var(--mint), #70D0B5);
+      color: #ffffff; border: 1px solid rgba(46,140,115,0.28); width: 100%; margin-top: 10px;
+      box-shadow: 0 8px 18px rgba(63,175,145,0.18);
+    }
+    .btn-soft-red {
+      background: linear-gradient(135deg, var(--berry), #EE8EA8);
+      color: #ffffff; border: 1px solid rgba(181,67,102,0.24); width: 100%;
+      box-shadow: 0 8px 18px rgba(216,90,123,0.18);
+    }
+    .link-btn::after { content: ' ↗'; font-size: 14px; font-weight: 900; margin-left: 6px; }
+    .link-btn { letter-spacing: 0.01em; }
+
+    .error {
+      display: none; background: var(--berry-light); color: var(--berry-dark); border: 1px solid var(--berry-soft);
+      border-radius: 14px; padding: 10px 12px; margin-bottom: 12px; font-size: 13px; line-height: 1.7; font-weight: 800;
+    }
+
+    .result-box { background: linear-gradient(135deg, #FFF8FB, #FFFFFF); border: 1px solid #F2D8E1; }
+    .result-name { font-size: 25px; font-weight: 900; color: var(--berry); margin: 8px 0; }
+    .fruit-photo, .purchase-hero-photo {
+      width: 100%; object-fit: cover; border-radius: 18px; display: block;
+      box-shadow: 0 8px 20px rgba(216,90,123,0.14);
+      background: linear-gradient(135deg, #FFF2F6, #F2FCF8);
+    }
+    .fruit-photo { height: 220px; margin-bottom: 14px; }
+    .purchase-hero-photo { height: 190px; margin-top: 12px; }
+    .fruit-thumb {
+      width: 76px; min-width: 76px; height: 76px; object-fit: cover; border-radius: 18px; display: block;
+      background: linear-gradient(135deg, #FFF2F6, #F2FCF8); box-shadow: 0 6px 16px rgba(216,90,123,0.10);
+    }
+    .tags span {
+      display: inline-block; background: linear-gradient(135deg, #F6FFFB, #EFFAF6); color: var(--mint-dark);
+      border-radius: 999px; padding: 6px 10px; margin-right: 6px; margin-top: 6px; font-size: 12px; font-weight: 900;
+    }
+
+    .card-list-item { background: var(--paper); border-radius: 22px; padding: 14px; margin-bottom: 12px; box-shadow: var(--shadow); }
     .item-head { display: flex; align-items: flex-start; gap: 12px; }
-    .icon-badge { width: 48px; min-width: 48px; height: 48px; border-radius: 18px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--green-light), #f8fcf9); color: var(--green); box-shadow: inset 0 0 0 1px rgba(30,63,48,0.08); font-size: 14px; font-weight: 800; overflow: hidden; text-align: center; padding: 4px; line-height: 1.2; }
-    .icon-badge.red { background: linear-gradient(135deg, var(--crimson-light), #fff7f8); color: var(--crimson); box-shadow: inset 0 0 0 1px rgba(190,46,70,0.08); }
-    .item-title { font-size: 16px; font-weight: 900; color: var(--green); margin: 0 0 6px; }
+    .icon-badge {
+      width: 52px; min-width: 52px; height: 52px; border-radius: 20px; display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, #F7FFFC, #EFFAF6); color: var(--mint-dark);
+      box-shadow: inset 0 0 0 1px rgba(63,175,145,0.10), 0 6px 14px rgba(63,175,145,0.08); overflow: hidden;
+      font-size: 14px; font-weight: 900;
+    }
+    .icon-badge.red {
+      background: linear-gradient(135deg, #FFF4F8, #FFF8FA); color: var(--berry-dark);
+      box-shadow: inset 0 0 0 1px rgba(216,90,123,0.10), 0 6px 14px rgba(216,90,123,0.08);
+    }
+    .item-title { font-size: 16px; font-weight: 900; color: var(--mint-dark); margin: 0 0 6px; }
     .item-desc { color: var(--subtext); line-height: 1.8; margin: 0; font-size: 13px; }
-    .meta { margin-top: 10px; margin-bottom: 10px; }
-    .meta span { display: inline-block; background: #eef2f0; color: #46574f; border-radius: 999px; padding: 4px 8px; font-size: 12px; margin-right: 6px; margin-bottom: 6px; font-weight: 800; }
-    .meta .open { background: var(--green-light); color: var(--green); }
     .link-stack { display: grid; gap: 8px; margin-top: 10px; }
-    .page-note { margin-top: 6px; font-size: 12px; line-height: 1.8; color: var(--subtext); background: #fcfaf8; border: 1px dashed rgba(30,63,48,0.15); border-radius: 12px; padding: 10px 12px; }
+    .page-note {
+      margin-top: 6px; margin-bottom: 10px; font-size: 12px; line-height: 1.8; color: var(--subtext);
+      background: #FFFDFE; border: 1px dashed rgba(63,175,145,0.18); border-radius: 12px; padding: 10px 12px;
+    }
+
+    .season-table-wrap { margin-top: 10px; overflow-x: auto; }
+    .season-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; }
+    .season-table th, .season-table td { padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+    .season-table th {
+      text-align: left; color: var(--mint-dark); background: linear-gradient(135deg, #F7FFFC, #EFFAF6); font-weight: 900;
+    }
+    .season-table tr:first-child th:first-child { border-top-left-radius: 14px; }
+    .season-table tr:first-child th:last-child { border-top-right-radius: 14px; }
+    .season-table tr:last-child td:first-child { border-bottom-left-radius: 14px; }
+    .season-table tr:last-child td:last-child { border-bottom-right-radius: 14px; }
+    .season-current td { background: linear-gradient(135deg, #FFF4F8, #FFF8FA); font-weight: 900; }
+    .season-pill {
+      display: inline-block; padding: 4px 8px; border-radius: 999px; font-size: 12px; font-weight: 900;
+      background: linear-gradient(135deg, var(--mint-light), #FAFFFD); color: var(--mint-dark); border: 1px solid var(--mint-soft); margin-left: 6px;
+    }
   </style>
 </head>
 <body>
   <div class="app">
     <div class="header">
-      <div class="badge">Cherry Select</div>
+      <div class="badge">
+        <svg class="svg-ico" viewBox="0 0 64 64" aria-hidden="true">
+          <path d="M39 10 C34 16 31 23 30 30" fill="none" stroke="#3FAF91" stroke-width="3.2" stroke-linecap="round"/>
+          <path d="M22 12 C28 14 32 18 34 24" fill="none" stroke="#3FAF91" stroke-width="3.2" stroke-linecap="round"/>
+          <path d="M18 10 C22 5 29 5 35 9 C29 11 23 12 18 10Z" fill="#CFEFE2"/>
+          <circle cx="23" cy="38" r="8.5" fill="#D85A7B"/>
+          <circle cx="39" cy="40" r="8" fill="#F3A5B8"/>
+          <circle cx="20" cy="35" r="2" fill="#fff" opacity="0.65"/>
+          <circle cx="36" cy="36" r="2" fill="#fff" opacity="0.65"/>
+        </svg>
+        <span>Cherry Select</span>
+      </div>
       <h1 class="title">おすすめさくらんぼ診断</h1>
       <p class="subtitle">アンケート → 品種紹介 → ふるさと納税 → 店舗情報 → 他品種比較</p>
     </div>
@@ -96,8 +191,30 @@
     <div class="content">
       <section id="screen-survey" class="screen active">
         <div class="card hero">
-          <h2>3つの質問でぴったりの品種を診断</h2>
-          <p>味の好み・用途・重視ポイントに合わせて、あなたに合うさくらんぼをご案内します。</p>
+          <div class="hero-row">
+            <div>
+              <h2>3つの質問でぴったりの品種を診断</h2>
+              <p>味の好み・用途・重視ポイントに合わせて、あなたに合うさくらんぼをご案内します。</p>
+            </div>
+            <div class="hero-ico" aria-hidden="true">
+              <svg class="svg-ico big" viewBox="0 0 96 96">
+                <defs>
+                  <linearGradient id="heroCherry1" x1="0" x2="1"><stop offset="0%" stop-color="#D85A7B"/><stop offset="100%" stop-color="#F08AA3"/></linearGradient>
+                  <linearGradient id="heroCherry2" x1="0" x2="1"><stop offset="0%" stop-color="#E57495"/><stop offset="100%" stop-color="#F7AFC1"/></linearGradient>
+                  <linearGradient id="heroLeaf" x1="0" x2="1"><stop offset="0%" stop-color="#3FAF91"/><stop offset="100%" stop-color="#7BD2B9"/></linearGradient>
+                </defs>
+                <path d="M58 16 C50 26 46 36 45 47" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/>
+                <path d="M29 20 C39 23 45 29 47 38" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/>
+                <path d="M24 17 C31 10 43 10 52 15 C42 19 33 20 24 17Z" fill="url(#heroLeaf)"/>
+                <circle cx="34" cy="60" r="15" fill="url(#heroCherry1)"/>
+                <circle cx="60" cy="64" r="14" fill="url(#heroCherry2)"/>
+                <circle cx="29" cy="54" r="3" fill="#ffffff" opacity="0.55"/>
+                <circle cx="55" cy="58" r="3" fill="#ffffff" opacity="0.55"/>
+                <path d="M14 70 C22 63 30 63 39 70" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+                <path d="M55 76 C63 69 71 69 80 76" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </div>
         </div>
 
         <div class="card">
@@ -107,23 +224,19 @@
             <label class="choice"><input type="radio" name="taste" value="balance"><span>バランス重視</span></label>
             <label class="choice"><input type="radio" name="taste" value="special"><span>特別感重視</span></label>
           </div>
-
           <div class="question">
             <div class="question-title">Q2. どんな用途ですか？</div>
             <label class="choice"><input type="radio" name="use" value="home"><span>自宅用</span></label>
             <label class="choice"><input type="radio" name="use" value="gift"><span>贈答用</span></label>
             <label class="choice"><input type="radio" name="use" value="rare"><span>珍しいものを試したい</span></label>
           </div>
-
           <div class="question">
             <div class="question-title">Q3. 何を重視しますか？</div>
             <label class="choice"><input type="radio" name="priority" value="easy"><span>食べやすさ</span></label>
             <label class="choice"><input type="radio" name="priority" value="size"><span>粒の大きさ</span></label>
             <label class="choice"><input type="radio" name="priority" value="special"><span>希少性</span></label>
           </div>
-
           <div id="errorBox" class="error">すべての質問に答えてください。</div>
-
           <div class="btn-row">
             <button id="diagnoseBtn" class="btn-primary" type="button">診断する</button>
             <button id="resetBtn" class="btn-outline" type="button">リセット</button>
@@ -141,12 +254,12 @@
         </div>
 
         <div class="card">
-          <h2 class="section-title">品種紹介</h2>
+          <h2 class="section-title"><span class="icon-badge" style="width:40px;min-width:40px;height:40px;">INFO</span>品種紹介</h2>
           <p id="resultDesc" class="lead"></p>
         </div>
 
         <div class="card">
-          <h2 class="section-title">こんな方におすすめ</h2>
+          <h2 class="section-title"><span class="icon-badge red" style="width:40px;min-width:40px;height:40px;">FOR</span>こんな方におすすめ</h2>
           <p id="resultRecommend" class="lead"></p>
         </div>
 
@@ -160,18 +273,35 @@
         <div class="card">
           <h2 id="storesTitle" class="section-title">この品種を買いたい方</h2>
           <p id="storesSubtitle" class="lead"></p>
+          <img id="storesPhoto" class="purchase-hero-photo" src="" alt="購入案内画像">
         </div>
 
         <div class="card">
-          <h2 class="section-title">ふるさと納税のおすすめ</h2>
-          <p class="lead">楽天ふるさと納税とふるさとチョイスの検索ページを掲載しています。</p>
+          <h2 class="section-title"><span class="icon-badge red" style="width:40px;min-width:40px;height:40px;">GIFT</span>ふるさと納税のおすすめ</h2>
+          <p class="lead">楽天ふるさと納税とふるさとチョイスの検索ページへ移動できます。</p>
         </div>
+
+        <div class="card">
+          <h2 class="section-title"><span class="icon-badge red" style="width:40px;min-width:40px;height:40px;">旬</span>"旬"な時期</h2>
+          <p class="lead">各品種の目安時期です。選択中の品種を強調表示しています。</p>
+          <div class="season-table-wrap">
+            <table class="season-table" aria-label="旬な時期一覧">
+              <thead>
+                <tr><th>品種</th><th>"旬"な時期</th><th>メモ</th></tr>
+              </thead>
+              <tbody id="seasonTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="page-note">下のボタンは外部サイトへのリンクです。タップすると各ページへ移動します。</div>
         <div id="taxArea"></div>
 
         <div class="card">
-          <h2 class="section-title">店舗の情報</h2>
-          <p class="lead">マップと観光協会のパンフレットページから、現地の店舗情報をご確認いただけます。</p>
+          <h2 class="section-title"><span class="icon-badge" style="width:40px;min-width:40px;height:40px;">MAP</span>店舗の情報</h2>
+          <p class="lead">観光マップPDFや観光協会ページへのリンクから、現地の店舗情報をご確認いただけます。</p>
         </div>
+        <div class="page-note">下のボタンは外部リンクです。観光マップPDFや観光協会サイトを開けます。</div>
         <div id="storesArea"></div>
 
         <div class="btn-row">
@@ -182,330 +312,205 @@
 
       <section id="screen-varieties" class="screen">
         <div class="card">
-          <h2 class="section-title">他の品種を選ぶ</h2>
+          <h2 class="section-title"><span class="icon-badge" style="width:40px;min-width:40px;height:40px;">FIND</span>他の品種を選ぶ</h2>
           <p class="lead">比較して見たい品種を選んでください。</p>
         </div>
-
         <div id="varietiesArea"></div>
-
         <div class="btn-row">
           <button id="backStoresBtn" class="btn-outline" type="button">店舗一覧に戻る</button>
           <button id="restartBtn" class="btn-primary" type="button">最初からやり直す</button>
-        </div>
-
-        <div class="page-note">
-          ※ 画像は <code>images</code> フォルダのファイルを参照します。画像が見つからない場合は自動でプレースホルダー画像を表示します。
         </div>
       </section>
     </div>
   </div>
 
   <script>
-    const defaultPhotoSvg =
-      "data:image/svg+xml;charset=UTF-8," +
-      encodeURIComponent(`
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
-          <defs>
-            <linearGradient id="bg" x1="0" x2="1">
-              <stop offset="0%" stop-color="#fdecef"/>
-              <stop offset="100%" stop-color="#edf6f0"/>
-            </linearGradient>
-            <linearGradient id="cherry" x1="0" x2="1">
-              <stop offset="0%" stop-color="#BE2E46"/>
-              <stop offset="100%" stop-color="#d95b71"/>
-            </linearGradient>
-          </defs>
-          <rect width="800" height="500" fill="url(#bg)"/>
-          <path d="M470 120 C430 160 410 220 400 270" stroke="#1E3F30" stroke-width="14" fill="none" stroke-linecap="round"/>
-          <path d="M330 120 C380 135 415 170 430 215" stroke="#1E3F30" stroke-width="14" fill="none" stroke-linecap="round"/>
-          <path d="M300 95 C335 45 420 42 470 84 C418 100 360 106 300 95Z" fill="#7EB089"/>
-          <circle cx="320" cy="335" r="86" fill="url(#cherry)"/>
-          <circle cx="490" cy="345" r="80" fill="url(#cherry)"/>
-          <circle cx="285" cy="300" r="18" fill="rgba(255,255,255,0.33)"/>
-          <circle cx="455" cy="308" r="18" fill="rgba(255,255,255,0.33)"/>
-          <text x="400" y="460" text-anchor="middle" font-size="36" fill="#1E3F30" font-family="sans-serif">画像を配置するとここに表示されます</text>
-        </svg>
-      `);
+    function trackEvent(eventName, params) {
+      try { if (typeof gtag === 'function') { gtag('event', eventName, params || {}); } } catch (e) { console.log('GA event skipped', eventName, params, e); }
+    }
 
-    const storeMapUrl = "https://www.niki-kanko.jp/common/img/brochure/niki_pam_2026_JP_MAPonly.pdf";
-    const brochureUrl = "https://www.niki-kanko.jp/brochure/";
+    const defaultPhotoSvg = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500"><defs><linearGradient id="bg" x1="0" x2="1"><stop offset="0%" stop-color="#FFF0F4"/><stop offset="100%" stop-color="#EFFAF6"/></linearGradient><linearGradient id="cherry" x1="0" x2="1"><stop offset="0%" stop-color="#D85A7B"/><stop offset="100%" stop-color="#F3A5B8"/></linearGradient></defs><rect width="800" height="500" fill="url(#bg)"/><path d="M470 120 C430 160 410 220 400 270" stroke="#3FAF91" stroke-width="14" fill="none" stroke-linecap="round"/><path d="M330 120 C380 135 415 170 430 215" stroke="#3FAF91" stroke-width="14" fill="none" stroke-linecap="round"/><path d="M300 95 C335 45 420 42 470 84 C418 100 360 106 300 95Z" fill="#CFEFE2"/><circle cx="320" cy="335" r="86" fill="url(#cherry)"/><circle cx="490" cy="345" r="80" fill="url(#cherry)"/><text x="400" y="460" text-anchor="middle" font-size="36" fill="#3FAF91" font-family="sans-serif">画像を配置するとここに表示されます</text></svg>`);
+
+    const storeMapUrl = 'https://www.niki-kanko.jp/common/img/brochure/niki_pam_2026_JP_MAPonly.pdf';
+    const brochureUrl = 'https://www.niki-kanko.jp/brochure/';
+
+    const seasonInfo = {
+      satonishiki: { label: '佐藤錦', period: '6月下旬～7月中旬', note: '定番・甘みと酸味のバランス' },
+      benishuho: { label: '紅秀峰', period: '7月中旬～7月下旬', note: '大粒・甘みが強め' },
+      nanyo: { label: '南陽', period: '7月中旬～7月下旬', note: '大粒・希少感あり' }
+    };
 
     const varieties = {
       satonishiki: {
-        name: "佐藤錦",
-        photo: "images/satonishiki.jpg",
-        copy: "定番人気で、甘さと酸味のバランスが魅力です。",
-        desc: "初めての方にもおすすめしやすい代表品種。仁木町のさくらんぼを知る入口として最適です。",
-        recommend: "定番感や食べやすさを重視する方、ご家庭用にも贈答用にも安心して選びたい方におすすめです。",
-        tags: ["定番", "バランス", "自宅向け"],
+        name: '佐藤錦',
+        photo: 'images/satonishiki.jpg',
+        copy: '定番人気で、甘さと酸味のバランスが魅力です。',
+        desc: '初めての方にもおすすめしやすい代表品種。仁木町のさくらんぼを知る入口として最適です。',
+        recommend: '定番感や食べやすさを重視する方、ご家庭用にも贈答用にも安心して選びたい方におすすめです。',
+        tags: ['定番', 'バランス', '自宅向け'],
         taxes: [
-          {
-            icon: "楽",
-            provider: "楽天ふるさと納税",
-            title: "佐藤錦（楽天ふるさと納税）",
-            desc: "仁木町×佐藤錦の返礼品を楽天ふるさと納税で検索できます。",
-            url: "https://search.rakuten.co.jp/search/mall/%22%E4%BD%90%E8%97%A4%E9%8C%A6%22/100246/?sid=370996"
-          },
-          {
-            icon: "CH",
-            provider: "ふるさとチョイス",
-            title: "佐藤錦（ふるさとチョイス）",
-            desc: "仁木町×佐藤錦の返礼品をふるさとチョイスで検索できます。",
-            url: "https://www.furusato-tax.jp/search?q=%E4%BB%81%E6%9C%A8%E7%94%BA%E3%80%80%E4%BD%90%E8%97%A4%E9%8C%A6&header=1&target=1"
-          }
+          { icon: '楽', provider: '楽天ふるさと納税', title: '佐藤錦（楽天ふるさと納税）', desc: '仁木町×佐藤錦の返礼品を楽天ふるさと納税で検索できます。', url: 'https://search.rakuten.co.jp/search/mall/%22%E4%BD%90%E8%97%A4%E9%8C%A6%22/100246/?sid=370996' },
+          { icon: 'CH', provider: 'ふるさとチョイス', title: '佐藤錦（ふるさとチョイス）', desc: '仁木町×佐藤錦の返礼品をふるさとチョイスで検索できます。', url: 'https://www.furusato-tax.jp/search?q=%E4%BB%81%E6%9C%A8%E7%94%BA%E3%80%80%E4%BD%90%E8%97%A4%E9%8C%A6&header=1&target=1' }
         ]
       },
       benishuho: {
-        name: "紅秀峰",
-        photo: "images/benishuho.jpg",
-        copy: "大粒で見栄えが良く、贈答にも向く人気品種です。",
-        desc: "しっかりした果肉で満足感があり、見栄えを重視したい方に選ばれやすい品種です。",
-        recommend: "贈り物やお土産、見た目の華やかさや大粒感を重視したい方におすすめです。",
-        tags: ["ギフト向け", "大粒", "見栄え"],
+        name: '紅秀峰',
+        photo: 'images/benishuho.jpg',
+        copy: '大粒で見栄えが良く、贈答にも向く人気品種です。',
+        desc: 'しっかりした果肉で満足感があり、見栄えを重視したい方に選ばれやすい品種です。',
+        recommend: '贈り物やお土産、見た目の華やかさや大粒感を重視したい方におすすめです。',
+        tags: ['ギフト向け', '大粒', '見栄え'],
         taxes: [
-          {
-            icon: "楽",
-            provider: "楽天ふるさと納税",
-            title: "紅秀峰（楽天ふるさと納税）",
-            desc: "仁木町×紅秀峰の返礼品を楽天ふるさと納税で検索できます。",
-            url: "https://search.rakuten.co.jp/search/mall/%22%E7%B4%85%E7%A7%80%E5%B3%B0%22/100246/?sid=370996"
-          },
-          {
-            icon: "CH",
-            provider: "ふるさとチョイス",
-            title: "紅秀峰（ふるさとチョイス）",
-            desc: "仁木町×紅秀峰の返礼品をふるさとチョイスで検索できます。",
-            url: "https://www.furusato-tax.jp/search?q=%E4%BB%81%E6%9C%A8%E7%94%BA%E3%80%80%E7%B4%85%E7%A7%80%E5%B3%B0&header=1&target=1"
-          }
+          { icon: '楽', provider: '楽天ふるさと納税', title: '紅秀峰（楽天ふるさと納税）', desc: '仁木町×紅秀峰の返礼品を楽天ふるさと納税で検索できます。', url: 'https://search.rakuten.co.jp/search/mall/%22%E7%B4%85%E7%A7%80%E5%B3%B0%22/100246/?sid=370996' },
+          { icon: 'CH', provider: 'ふるさとチョイス', title: '紅秀峰（ふるさとチョイス）', desc: '仁木町×紅秀峰の返礼品をふるさとチョイスで検索できます。', url: 'https://www.furusato-tax.jp/search?q=%E4%BB%81%E6%9C%A8%E7%94%BA%E3%80%80%E7%B4%85%E7%A7%80%E5%B3%B0&header=1&target=1' }
         ]
       },
       nanyo: {
-        name: "南陽",
-        photo: "images/nanyo.jpg",
-        copy: "やわらかな果肉と存在感のある大粒感が魅力の品種です。",
-        desc: "大粒で食べごたえがあり、やさしい甘さと存在感のある果実を楽しみたい方に向く品種です。",
-        recommend: "希少性や大粒感を楽しみたい方、少し特別感のある品種を選びたい方におすすめです。",
-        tags: ["希少感", "大粒", "特別感"],
+        name: '南陽',
+        photo: 'images/nanyo.jpg',
+        copy: 'やわらかな果肉と存在感のある大粒感が魅力の品種です。',
+        desc: '大粒で食べごたえがあり、やさしい甘さと存在感のある果実を楽しみたい方に向く品種です。',
+        recommend: '希少性や大粒感を楽しみたい方、少し特別感のある品種を選びたい方におすすめです。',
+        tags: ['希少感', '大粒', '特別感'],
         taxes: [
-          {
-            icon: "楽",
-            provider: "楽天ふるさと納税",
-            title: "南陽（楽天ふるさと納税）",
-            desc: "仁木町×南陽の返礼品を楽天ふるさと納税で検索できます。",
-            url: "https://search.rakuten.co.jp/search/mall/%22%E5%8D%97%E9%99%BD%22/100246/?sid=370996"
-          },
-          {
-            icon: "CH",
-            provider: "ふるさとチョイス",
-            title: "南陽（ふるさとチョイス）",
-            desc: "仁木町×南陽の返礼品をふるさとチョイスで検索できます。",
-            url: "https://www.furusato-tax.jp/search?q=%E4%BB%81%E6%9C%A8%E7%94%BA%E3%80%80%E5%8D%97%E9%99%BD&header=1&target=1"
-          }
+          { icon: '楽', provider: '楽天ふるさと納税', title: '南陽（楽天ふるさと納税）', desc: '仁木町×南陽の返礼品を楽天ふるさと納税で検索できます。', url: 'https://search.rakuten.co.jp/search/mall/%22%E5%8D%97%E9%99%BD%22/100246/?sid=370996' },
+          { icon: 'CH', provider: 'ふるさとチョイス', title: '南陽（ふるさとチョイス）', desc: '仁木町×南陽の返礼品をふるさとチョイスで検索できます。', url: 'https://www.furusato-tax.jp/search?q=%E4%BB%81%E6%9C%A8%E7%94%BA%E3%80%80%E5%8D%97%E9%99%BD&header=1&target=1' }
         ]
       }
     };
 
     let currentVarietyKey = null;
+    const surveyScreen = document.getElementById('screen-survey');
+    const resultScreen = document.getElementById('screen-result');
+    const storesScreen = document.getElementById('screen-stores');
+    const varietiesScreen = document.getElementById('screen-varieties');
+    const errorBox = document.getElementById('errorBox');
 
-    const surveyScreen = document.getElementById("screen-survey");
-    const resultScreen = document.getElementById("screen-result");
-    const storesScreen = document.getElementById("screen-stores");
-    const varietiesScreen = document.getElementById("screen-varieties");
-    const errorBox = document.getElementById("errorBox");
-
-    function showScreen(target) {
-      [surveyScreen, resultScreen, storesScreen, varietiesScreen].forEach(function(s) {
-        s.classList.remove("active");
-      });
-      target.classList.add("active");
-      window.scrollTo(0, 0);
+    function showScreen(target, screenName) {
+      [surveyScreen, resultScreen, storesScreen, varietiesScreen].forEach(function(s){ s.classList.remove('active'); });
+      target.classList.add('active');
+      if (screenName) trackEvent('screen_view_custom', { screen_name: screenName });
+      window.scrollTo(0,0);
     }
 
     function resetSurvey() {
-      document.querySelectorAll('input[type="radio"]').forEach(function(r) {
-        r.checked = false;
-      });
-      errorBox.style.display = "none";
+      document.querySelectorAll('input[type="radio"]').forEach(function(r){ r.checked = false; });
+      errorBox.style.display = 'none';
+      trackEvent('survey_reset', { section: 'survey' });
     }
 
     function decideVariety() {
       const taste = document.querySelector('input[name="taste"]:checked');
       const use = document.querySelector('input[name="use"]:checked');
       const priority = document.querySelector('input[name="priority"]:checked');
-
       if (!taste || !use || !priority) return null;
-      if (taste.value === "sweet" && use.value === "gift") return "benishuho";
-      if (taste.value === "special" || use.value === "rare" || priority.value === "special") return "nanyo";
-      return "satonishiki";
+      if (taste.value === 'sweet' && use.value === 'gift') return 'benishuho';
+      if (taste.value === 'special' || use.value === 'rare' || priority.value === 'special') return 'nanyo';
+      return 'satonishiki';
     }
 
     function renderResult(key) {
       const v = varieties[key];
-      document.getElementById("resultName").textContent = v.name;
-      document.getElementById("resultCopy").textContent = v.copy;
-      document.getElementById("resultDesc").textContent = v.desc;
-      document.getElementById("resultRecommend").textContent = v.recommend;
-      document.getElementById("resultTags").innerHTML = v.tags.map(function(tag) {
-        return '<span>' + tag + '</span>';
-      }).join('');
-
-      const img = document.getElementById("resultPhoto");
+      document.getElementById('resultName').textContent = v.name;
+      document.getElementById('resultCopy').textContent = v.copy;
+      document.getElementById('resultDesc').textContent = v.desc;
+      document.getElementById('resultRecommend').textContent = v.recommend;
+      document.getElementById('resultTags').innerHTML = v.tags.map(function(tag){ return '<span>' + tag + '</span>'; }).join('');
+      const img = document.getElementById('resultPhoto');
       if (img) {
-        img.onerror = function() {
-          this.onerror = null;
-          this.src = defaultPhotoSvg;
-        };
+        img.onerror = function(){ this.onerror = null; this.src = defaultPhotoSvg; };
         img.src = v.photo;
         img.alt = v.name;
       }
+      trackEvent('diagnosis_result', { variety_key:key, variety_name:v.name });
+    }
+
+    function renderSeasonTable(currentKey) {
+      const rows = ['satonishiki', 'benishuho', 'nanyo'].map(function(k){
+        const s = seasonInfo[k];
+        const cls = k === currentKey ? ' class="season-current"' : '';
+        const mark = k === currentKey ? ' <span class="season-pill">選択中</span>' : '';
+        return '<tr' + cls + '><td>' + s.label + mark + '</td><td>' + s.period + '</td><td>' + s.note + '</td></tr>';
+      }).join('');
+      const body = document.getElementById('seasonTableBody');
+      if (body) body.innerHTML = rows;
+    }
+
+    function bindTrackedLinks() {
+      document.querySelectorAll('.tax-link').forEach(function(link){
+        link.addEventListener('click', function(){
+          trackEvent('tax_link_click', { variety_name:this.dataset.variety, provider:this.dataset.provider, index_no:this.dataset.index });
+        });
+      });
+      document.querySelectorAll('.store-link').forEach(function(link){
+        link.addEventListener('click', function(){
+          trackEvent('store_info_click', { variety_name:this.dataset.variety, link_type:this.dataset.linktype });
+        });
+      });
     }
 
     function renderStoresAndTax(key) {
       const v = varieties[key];
-      document.getElementById("storesTitle").textContent = v.name + "を買いたい方";
-      document.getElementById("storesSubtitle").textContent =
-        "「" + v.name + "」を購入したい方向けに、ふるさと納税と店舗情報を掲載しています。";
+      document.getElementById('storesTitle').textContent = v.name + 'を買いたい方';
+      document.getElementById('storesSubtitle').textContent = '「' + v.name + '」を購入したい方向けに、ふるさと納税と店舗情報を掲載しています。';
+      const storesPhoto = document.getElementById('storesPhoto');
+      if (storesPhoto) {
+        storesPhoto.onerror = function(){ this.onerror = null; this.src = defaultPhotoSvg; };
+        storesPhoto.src = v.photo;
+        storesPhoto.alt = v.name + 'の購入案内画像';
+      }
+      renderSeasonTable(key);
 
-      const taxesHtml = v.taxes.map(function(item) {
-        return `
-          <div class="card-list-item">
-            <div class="item-head">
-              <div class="icon-badge red">${item.icon}</div>
-              <div>
-                <div class="item-title">${item.provider}</div>
-                <p class="item-desc">${item.desc}</p>
-              </div>
-            </div>
-            <div class="link-stack">
-              <a class="link-btn btn-soft-red" href="${item.url}" target="_blank" rel="noopener noreferrer">
-                ${item.title}を開く
-              </a>
-            </div>
-          </div>
-        `;
-      }).join("");
+      const taxesHtml = v.taxes.map(function(item, idx){
+        return '<div class="card-list-item"><div class="item-head"><div class="icon-badge red">' + item.icon + '</div><div><div class="item-title">' + item.provider + '</div><p class="item-desc">' + item.desc + '</p></div></div><div class="link-stack"><a class="link-btn btn-soft-red tax-link" data-variety="' + v.name + '" data-provider="' + item.provider + '" data-index="' + idx + '" href="' + item.url + '" target="_blank" rel="noopener noreferrer">' + item.title + 'をサイトで見る</a></div></div>';
+      }).join('');
 
-      const storesHtml = `
-        <div class="card-list-item">
-          <div class="item-head">
-            <div class="icon-badge">MAP</div>
-            <div>
-              <div class="item-title">仁木町観光マップ（PDF）</div>
-              <p class="item-desc">観光農園、直売所、食事、買い物、宿泊、ワイナリーなどを掲載した観光マップです。</p>
-            </div>
-          </div>
-          <div class="link-stack">
-            <a class="link-btn btn-soft-green" href="${storeMapUrl}" target="_blank" rel="noopener noreferrer">観光マップを開く</a>
-          </div>
-        </div>
-        <div class="card-list-item">
-          <div class="item-head">
-            <div class="icon-badge">HP</div>
-            <div>
-              <div class="item-title">仁木町観光協会 パンフレットページ</div>
-              <p class="item-desc">公式パンフレットや観光マップのダウンロードページです。店舗・観光情報の確認に利用できます。</p>
-            </div>
-          </div>
-          <div class="link-stack">
-            <a class="link-btn btn-soft-green" href="${brochureUrl}" target="_blank" rel="noopener noreferrer">観光協会ページを開く</a>
-          </div>
-        </div>
-      `;
+      const storesHtml = '<div class="card-list-item"><div class="item-head"><div class="icon-badge">MAP</div><div><div class="item-title">仁木町観光マップ（PDF）</div><p class="item-desc">観光農園、直売所、食事、買い物、宿泊、ワイナリーなどを掲載した観光マップです。</p></div></div><div class="link-stack"><a class="link-btn btn-soft-green store-link" data-linktype="map_pdf" data-variety="' + v.name + '" href="' + storeMapUrl + '" target="_blank" rel="noopener noreferrer">観光マップPDFを見る</a></div></div><div class="card-list-item"><div class="item-head"><div class="icon-badge">HP</div><div><div class="item-title">仁木町観光協会 パンフレットページ</div><p class="item-desc">公式パンフレットや観光マップのダウンロードページです。店舗・観光情報の確認に利用できます。</p></div></div><div class="link-stack"><a class="link-btn btn-soft-green store-link" data-linktype="brochure_page" data-variety="' + v.name + '" href="' + brochureUrl + '" target="_blank" rel="noopener noreferrer">観光協会ページを見る</a></div></div>';
 
-      document.getElementById("taxArea").innerHTML = taxesHtml;
-      document.getElementById("storesArea").innerHTML = storesHtml;
+      document.getElementById('taxArea').innerHTML = taxesHtml;
+      document.getElementById('storesArea').innerHTML = storesHtml;
+      bindTrackedLinks();
+      trackEvent('purchase_info_view', { variety_key:key, variety_name:v.name });
     }
 
     function renderVarietiesPage(currentKey) {
-      const html = Object.keys(varieties)
-        .filter(function(key) { return key !== currentKey; })
-        .map(function(key) {
-          const v = varieties[key];
-          return `
-            <div class="card-list-item">
-              <div class="item-head">
-                <img class="fruit-thumb" src="${v.photo}" alt="${v.name}" onerror="this.onerror=null; this.src=window.defaultPhotoSvg;" />
-                <div>
-                  <div class="item-title">${v.name}</div>
-                  <p class="item-desc">${v.copy}</p>
-                </div>
-              </div>
-              <div class="btn-row" style="margin-top:12px;">
-                <button type="button" class="btn-outline variety-result-btn" data-key="${key}">品種紹介を見る</button>
-                <button type="button" class="btn-primary variety-stores-btn" data-key="${key}">この品種を買いたい方</button>
-              </div>
-            </div>
-          `;
-        }).join("");
-
-      document.getElementById("varietiesArea").innerHTML = html;
-
-      document.querySelectorAll(".variety-result-btn").forEach(function(btn) {
-        btn.addEventListener("click", function() {
-          const key = this.getAttribute("data-key");
-          currentVarietyKey = key;
-          renderResult(key);
-          showScreen(resultScreen);
-        });
+      const html = Object.keys(varieties).filter(function(key){ return key !== currentKey; }).map(function(key){
+        const v = varieties[key];
+        return '<div class="card-list-item"><div class="item-head"><img class="fruit-thumb" src="' + v.photo + '" alt="' + v.name + '" onerror="this.onerror=null; this.src=window.defaultPhotoSvg;" /><div><div class="item-title">' + v.name + '</div><p class="item-desc">' + v.copy + '</p></div></div><div class="btn-row" style="margin-top:12px;"><button type="button" class="btn-outline variety-result-btn" data-key="' + key + '">品種紹介を見る</button><button type="button" class="btn-primary variety-stores-btn" data-key="' + key + '">この品種を買いたい方</button></div></div>';
+      }).join('');
+      document.getElementById('varietiesArea').innerHTML = html;
+      document.querySelectorAll('.variety-result-btn').forEach(function(btn){
+        btn.addEventListener('click', function(){ const key = this.getAttribute('data-key'); currentVarietyKey = key; renderResult(key); showScreen(resultScreen, 'result'); });
       });
-
-      document.querySelectorAll(".variety-stores-btn").forEach(function(btn) {
-        btn.addEventListener("click", function() {
-          const key = this.getAttribute("data-key");
-          currentVarietyKey = key;
-          renderStoresAndTax(key);
-          showScreen(storesScreen);
-        });
+      document.querySelectorAll('.variety-stores-btn').forEach(function(btn){
+        btn.addEventListener('click', function(){ const key = this.getAttribute('data-key'); currentVarietyKey = key; renderStoresAndTax(key); showScreen(storesScreen, 'purchase_info'); });
       });
     }
 
     window.defaultPhotoSvg = defaultPhotoSvg;
 
-    document.addEventListener("DOMContentLoaded", function() {
-      document.getElementById("diagnoseBtn").addEventListener("click", function() {
+    document.addEventListener('DOMContentLoaded', function(){
+      trackEvent('screen_view_custom', { screen_name:'survey' });
+      document.getElementById('diagnoseBtn').addEventListener('click', function(){
         const key = decideVariety();
+        trackEvent('diagnose_click', { section:'survey' });
         if (!key) {
-          errorBox.style.display = "block";
+          errorBox.style.display = 'block';
+          trackEvent('diagnose_validation_error', { reason:'unanswered' });
           return;
         }
-        errorBox.style.display = "none";
+        errorBox.style.display = 'none';
         currentVarietyKey = key;
         renderResult(key);
-        showScreen(resultScreen);
+        showScreen(resultScreen, 'result');
       });
-
-      document.getElementById("resetBtn").addEventListener("click", function() {
-        resetSurvey();
-      });
-
-      document.getElementById("toStoresBtn").addEventListener("click", function() {
-        if (!currentVarietyKey) return;
-        renderStoresAndTax(currentVarietyKey);
-        showScreen(storesScreen);
-      });
-
-      document.getElementById("backSurveyBtn").addEventListener("click", function() {
-        showScreen(surveyScreen);
-      });
-
-      document.getElementById("backResultBtn").addEventListener("click", function() {
-        showScreen(resultScreen);
-      });
-
-      document.getElementById("toVarietiesBtn").addEventListener("click", function() {
-        if (!currentVarietyKey) return;
-        renderVarietiesPage(currentVarietyKey);
-        showScreen(varietiesScreen);
-      });
-
-      document.getElementById("backStoresBtn").addEventListener("click", function() {
-        showScreen(storesScreen);
-      });
-
-      document.getElementById("restartBtn").addEventListener("click", function() {
-        showScreen(surveyScreen);
-        resetSurvey();
-      });
+      document.getElementById('resetBtn').addEventListener('click', function(){ resetSurvey(); });
+      document.getElementById('toStoresBtn').addEventListener('click', function(){ if (!currentVarietyKey) return; renderStoresAndTax(currentVarietyKey); showScreen(storesScreen, 'purchase_info'); });
+      document.getElementById('backSurveyBtn').addEventListener('click', function(){ showScreen(surveyScreen, 'survey'); });
+      document.getElementById('backResultBtn').addEventListener('click', function(){ showScreen(resultScreen, 'result'); });
+      document.getElementById('toVarietiesBtn').addEventListener('click', function(){ if (!currentVarietyKey) return; renderVarietiesPage(currentVarietyKey); showScreen(varietiesScreen, 'compare'); });
+      document.getElementById('backStoresBtn').addEventListener('click', function(){ showScreen(storesScreen, 'purchase_info'); });
+      document.getElementById('restartBtn').addEventListener('click', function(){ showScreen(surveyScreen, 'survey'); resetSurvey(); });
     });
   </script>
 </body>
