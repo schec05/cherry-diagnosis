@@ -1,466 +1,122 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>さくらんぼ診断 画像ファイル差し込み版</title>
+  <title>おすすめさくらんぼ診断</title>
   <style>
     :root {
       --crimson: #BE2E46;
       --crimson-dark: #9f2238;
       --crimson-light: #fdecef;
       --crimson-soft: #f5d7de;
-
       --green: #1E3F30;
-      --green-dark: #173126;
       --green-light: #edf6f0;
       --green-soft: #dcebe1;
-
       --ivory: #f8f5f1;
       --paper: #ffffff;
       --text: #2d2d2d;
       --subtext: #666666;
       --line: #e8dfdb;
-
       --shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
       --radius-xl: 28px;
       --radius-lg: 22px;
-      --radius-md: 16px;
     }
-
-    * {
-      box-sizing: border-box;
-    }
-
+    * { box-sizing: border-box; }
     body {
       margin: 0;
-      font-family:
-        "Hiragino Maru Gothic ProN",
-        "Yu Gothic UI",
-        "Yu Gothic",
-        Meiryo,
-        sans-serif;
+      font-family: "Hiragino Maru Gothic ProN", "Yu Gothic UI", "Yu Gothic", Meiryo, sans-serif;
       color: var(--text);
       background:
         radial-gradient(circle at top right, rgba(190,46,70,0.10), transparent 24%),
         radial-gradient(circle at top left, rgba(30,63,48,0.10), transparent 24%),
         linear-gradient(180deg, #fff3f5 0px, #f2f8f4 230px, var(--ivory) 430px);
     }
-
-    .app {
-      max-width: 440px;
-      margin: 0 auto;
-      min-height: 100vh;
-      background: transparent;
-    }
-
+    .app { max-width: 440px; margin: 0 auto; min-height: 100vh; }
     .header {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      padding: 14px 16px 12px;
-      background: rgba(255,255,255,0.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--line);
+      position: sticky; top: 0; z-index: 20; padding: 14px 16px 12px;
+      background: rgba(255,255,255,0.94); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line);
     }
-
     .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 7px 12px;
-      border-radius: 999px;
-      background: linear-gradient(135deg, var(--green-light), #f8fcf9);
-      border: 1px solid var(--green-soft);
-      color: var(--green);
-      font-size: 12px;
-      font-weight: 800;
-      margin-bottom: 8px;
+      display: inline-flex; align-items: center; padding: 7px 12px; border-radius: 999px;
+      background: linear-gradient(135deg, var(--green-light), #f8fcf9); border: 1px solid var(--green-soft);
+      color: var(--green); font-size: 12px; font-weight: 800; margin-bottom: 8px;
     }
-
-    .title-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .title {
-      margin: 0;
-      font-size: 22px;
-      font-weight: 900;
-      color: var(--green);
-    }
-
-    .subtitle {
-      margin: 6px 0 0;
-      color: var(--subtext);
-      font-size: 13px;
-      line-height: 1.8;
-    }
-
-    .content {
-      padding: 16px;
-      padding-bottom: 40px;
-    }
-
-    .screen {
-      display: none !important;
-    }
-
-    .screen.active {
-      display: block !important;
-    }
-
-    .card {
-      background: var(--paper);
-      border-radius: var(--radius-lg);
-      padding: 16px;
-      margin-bottom: 14px;
-      box-shadow: var(--shadow);
-    }
-
-    .hero {
-      background: linear-gradient(135deg, var(--crimson), #d6536b 70%);
-      color: white;
-      border-radius: var(--radius-xl);
-      padding: 20px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero::after {
-      content: "";
-      position: absolute;
-      right: -14px;
-      top: -14px;
-      width: 110px;
-      height: 110px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(255,255,255,0.18), transparent 70%);
-    }
-
-    .hero-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 14px;
-      align-items: flex-start;
-      position: relative;
-      z-index: 1;
-    }
-
-    .hero h2 {
-      margin: 0 0 8px;
-      font-size: 21px;
-      color: white;
-    }
-
-    .hero p {
-      margin: 0;
-      font-size: 13px;
-      line-height: 1.9;
-    }
-
-    .hero-svg {
-      width: 84px;
-      min-width: 84px;
-      height: 84px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .section-title {
-      margin: 0 0 10px;
-      font-size: 18px;
-      font-weight: 900;
-      color: var(--green);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .lead {
-      color: var(--subtext);
-      font-size: 13px;
-      line-height: 1.85;
-      margin: 0 0 12px;
-    }
-
-    .question {
-      margin-bottom: 18px;
-    }
-
-    .question-title {
-      font-size: 15px;
-      font-weight: 900;
-      margin-bottom: 10px;
-      color: var(--green);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .choice {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 8px;
-      padding: 12px 13px;
-      background: #fffdfc;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      cursor: pointer;
-    }
-
-    .choice input {
-      accent-color: var(--crimson);
-      transform: scale(1.08);
-    }
-
-    .choice span {
-      font-size: 14px;
-      line-height: 1.6;
-      font-weight: 600;
-    }
-
-    .btn-row {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    button {
-      border: none;
-      border-radius: 16px;
-      padding: 13px 16px;
-      min-height: 48px;
-      font-size: 14px;
-      font-weight: 900;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      transition: transform .12s ease, background .12s ease;
-      flex: 1;
-    }
-
-    button:active {
-      transform: scale(0.98);
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--crimson), #d14a61);
-      color: white;
-    }
-
-    .btn-secondary {
-      background: linear-gradient(135deg, var(--green), #2d5845);
-      color: white;
-    }
-
-    .btn-outline {
-      background: white;
-      border: 1px solid var(--line);
-      color: var(--green);
-    }
-
-    .btn-soft-green {
-      background: linear-gradient(135deg, var(--green-light), #f8fcf9);
-      color: var(--green);
-      border: 1px solid var(--green-soft);
-    }
-
-    .btn-soft-red {
-      background: linear-gradient(135deg, var(--crimson-light), #fff7f8);
-      color: var(--crimson);
-      border: 1px solid var(--crimson-soft);
-    }
-
-    .error {
-      display: none;
-      background: var(--crimson-light);
-      color: var(--crimson);
-      border: 1px solid var(--crimson-soft);
-      border-radius: 14px;
-      padding: 10px 12px;
-      margin-bottom: 12px;
-      font-size: 13px;
-      line-height: 1.7;
-      font-weight: 800;
-    }
-
-    .result-box {
-      background: linear-gradient(135deg, #fff8f9, #ffffff);
-      border: 1px solid #efd5da;
-    }
-
-    .result-name {
-      font-size: 25px;
-      font-weight: 900;
-      color: var(--crimson);
-      margin: 8px 0;
-    }
-
-    .fruit-photo {
-      width: 100%;
-      height: 220px;
-      object-fit: cover;
-      border-radius: 18px;
-      display: block;
-      margin-bottom: 14px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-      background: linear-gradient(135deg, #fff0f4, #f2f8f4);
-    }
-
-    .fruit-thumb {
-      width: 76px;
-      min-width: 76px;
-      height: 76px;
-      object-fit: cover;
-      border-radius: 18px;
-      display: block;
-      background: linear-gradient(135deg, #fff0f4, #f2f8f4);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.06);
-    }
-
-    .tags span {
-      display: inline-block;
-      background: var(--green-light);
-      color: var(--green);
-      border-radius: 999px;
-      padding: 6px 10px;
-      margin-right: 6px;
-      margin-top: 6px;
-      font-size: 12px;
-      font-weight: 900;
-    }
-
-    .card-list-item {
-      background: var(--paper);
-      border-radius: var(--radius-lg);
-      padding: 14px;
-      margin-bottom: 12px;
-      box-shadow: var(--shadow);
-    }
-
-    .item-head {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-    }
-
-    .icon-badge {
-      width: 48px;
-      min-width: 48px;
-      height: 48px;
-      border-radius: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, var(--green-light), #f8fcf9);
-      color: var(--green);
-      box-shadow: inset 0 0 0 1px rgba(30,63,48,0.08);
-      font-size: 22px;
-    }
-
-    .icon-badge.red {
-      background: linear-gradient(135deg, var(--crimson-light), #fff7f8);
-      color: var(--crimson);
-      box-shadow: inset 0 0 0 1px rgba(190,46,70,0.08);
-    }
-
-    .item-title {
-      font-size: 16px;
-      font-weight: 900;
-      color: var(--green);
-      margin: 0 0 6px;
-    }
-
-    .item-desc {
-      color: var(--subtext);
-      line-height: 1.8;
-      margin: 0;
-      font-size: 13px;
-    }
-
-    .meta {
-      margin-top: 10px;
-      margin-bottom: 10px;
-    }
-
-    .meta span {
-      display: inline-block;
-      background: #eef2f0;
-      color: #46574f;
-      border-radius: 999px;
-      padding: 4px 8px;
-      font-size: 12px;
-      margin-right: 6px;
-      margin-bottom: 6px;
-      font-weight: 800;
-    }
-
-    .meta .open {
-      background: var(--green-light);
-      color: var(--green);
-    }
-
-    .page-note {
-      margin-top: 6px;
-      font-size: 12px;
-      line-height: 1.8;
-      color: var(--subtext);
-      background: #fcfaf8;
-      border: 1px dashed rgba(30,63,48,0.15);
-      border-radius: 12px;
-      padding: 10px 12px;
-    }
+    .title { margin: 0; font-size: 22px; font-weight: 900; color: var(--green); }
+    .subtitle { margin: 6px 0 0; color: var(--subtext); font-size: 13px; line-height: 1.8; }
+    .content { padding: 16px; padding-bottom: 40px; }
+    .screen { display: none; }
+    .screen.active { display: block; }
+    .card { background: var(--paper); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 14px; box-shadow: var(--shadow); }
+    .hero { background: linear-gradient(135deg, var(--crimson), #d6536b 70%); color: white; border-radius: var(--radius-xl); padding: 20px; }
+    .hero h2 { margin: 0 0 8px; font-size: 21px; color: white; }
+    .hero p { margin: 0; font-size: 13px; line-height: 1.9; }
+    .section-title { margin: 0 0 10px; font-size: 18px; font-weight: 900; color: var(--green); }
+    .lead { color: var(--subtext); font-size: 13px; line-height: 1.85; margin: 0 0 12px; }
+    .question { margin-bottom: 18px; }
+    .question-title { font-size: 15px; font-weight: 900; margin-bottom: 10px; color: var(--green); }
+    .choice { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; padding: 12px 13px; background: #fffdfc; border: 1px solid var(--line); border-radius: 16px; cursor: pointer; }
+    .choice input { accent-color: var(--crimson); transform: scale(1.08); }
+    .choice span { font-size: 14px; line-height: 1.6; font-weight: 600; }
+    .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    button, a.link-btn { border: none; border-radius: 16px; padding: 13px 16px; min-height: 48px; font-size: 14px; font-weight: 900; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; text-align: center; text-decoration: none; }
+    button { flex: 1; }
+    .btn-primary { background: linear-gradient(135deg, var(--crimson), #d14a61); color: white; }
+    .btn-secondary { background: linear-gradient(135deg, var(--green), #2d5845); color: white; }
+    .btn-outline { background: white; border: 1px solid var(--line); color: var(--green); }
+    .btn-soft-green { background: linear-gradient(135deg, var(--green-light), #f8fcf9); color: var(--green); border: 1px solid var(--green-soft); width: 100%; margin-top: 10px; }
+    .btn-soft-red { background: linear-gradient(135deg, var(--crimson-light), #fff7f8); color: var(--crimson); border: 1px solid var(--crimson-soft); width: 100%; }
+    .error { display: none; background: var(--crimson-light); color: var(--crimson); border: 1px solid var(--crimson-soft); border-radius: 14px; padding: 10px 12px; margin-bottom: 12px; font-size: 13px; line-height: 1.7; font-weight: 800; }
+    .result-box { background: linear-gradient(135deg, #fff8f9, #ffffff); border: 1px solid #efd5da; }
+    .result-name { font-size: 25px; font-weight: 900; color: var(--crimson); margin: 8px 0; }
+    .fruit-photo { width: 100%; height: 220px; object-fit: cover; border-radius: 18px; display: block; margin-bottom: 14px; box-shadow: 0 8px 20px rgba(0,0,0,0.08); background: linear-gradient(135deg, #fff0f4, #f2f8f4); }
+    .fruit-thumb { width: 76px; min-width: 76px; height: 76px; object-fit: cover; border-radius: 18px; display: block; background: linear-gradient(135deg, #fff0f4, #f2f8f4); box-shadow: 0 6px 16px rgba(0,0,0,0.06); }
+    .tags span { display: inline-block; background: var(--green-light); color: var(--green); border-radius: 999px; padding: 6px 10px; margin-right: 6px; margin-top: 6px; font-size: 12px; font-weight: 900; }
+    .card-list-item { background: var(--paper); border-radius: var(--radius-lg); padding: 14px; margin-bottom: 12px; box-shadow: var(--shadow); }
+    .item-head { display: flex; align-items: flex-start; gap: 12px; }
+    .icon-badge { width: 48px; min-width: 48px; height: 48px; border-radius: 18px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--green-light), #f8fcf9); color: var(--green); box-shadow: inset 0 0 0 1px rgba(30,63,48,0.08); font-size: 14px; font-weight: 800; overflow: hidden; text-align: center; padding: 4px; line-height: 1.2; }
+    .icon-badge.red { background: linear-gradient(135deg, var(--crimson-light), #fff7f8); color: var(--crimson); box-shadow: inset 0 0 0 1px rgba(190,46,70,0.08); }
+    .item-title { font-size: 16px; font-weight: 900; color: var(--green); margin: 0 0 6px; }
+    .item-desc { color: var(--subtext); line-height: 1.8; margin: 0; font-size: 13px; }
+    .meta { margin-top: 10px; margin-bottom: 10px; }
+    .meta span { display: inline-block; background: #eef2f0; color: #46574f; border-radius: 999px; padding: 4px 8px; font-size: 12px; margin-right: 6px; margin-bottom: 6px; font-weight: 800; }
+    .meta .open { background: var(--green-light); color: var(--green); }
+    .link-stack { display: grid; gap: 8px; margin-top: 10px; }
+    .page-note { margin-top: 6px; font-size: 12px; line-height: 1.8; color: var(--subtext); background: #fcfaf8; border: 1px dashed rgba(30,63,48,0.15); border-radius: 12px; padding: 10px 12px; }
   </style>
 </head>
 <body>
   <div class="app">
     <div class="header">
-      <div class="badge">● Cherry Select</div>
-      <div class="title-row">
-        <div class="icon-badge red" aria-hidden="true">🍒</div>
-        <h1 class="title">おすすめさくらんぼ診断</h1>
-      </div>
-      <p class="subtitle">アンケート → 品種紹介 → 店舗一覧 → ふるさと納税 → 他品種比較</p>
+      <div class="badge">Cherry Select</div>
+      <h1 class="title">おすすめさくらんぼ診断</h1>
+      <p class="subtitle">アンケート → 品種紹介 → ふるさと納税 → 店舗情報 → 他品種比較</p>
     </div>
 
     <div class="content">
-      <!-- 1: アンケート -->
       <section id="screen-survey" class="screen active">
         <div class="card hero">
-          <div class="hero-row">
-            <div>
-              <h2>🍒 3つの質問でぴったりの品種を診断</h2>
-              <p>味の好み・用途・重視ポイントに合わせて、あなたに合うさくらんぼをご案内します。</p>
-            </div>
-            <div class="hero-svg" aria-hidden="true">
-              <div class="icon-badge red" style="width:72px;height:72px;border-radius:24px;font-size:34px;">🍒</div>
-            </div>
-          </div>
+          <h2>3つの質問でぴったりの品種を診断</h2>
+          <p>味の好み・用途・重視ポイントに合わせて、あなたに合うさくらんぼをご案内します。</p>
         </div>
 
         <div class="card">
           <div class="question">
-            <div class="question-title">📝 Q1. どんな味が好みですか？</div>
+            <div class="question-title">Q1. どんな味が好みですか？</div>
             <label class="choice"><input type="radio" name="taste" value="sweet"><span>甘さ重視</span></label>
             <label class="choice"><input type="radio" name="taste" value="balance"><span>バランス重視</span></label>
             <label class="choice"><input type="radio" name="taste" value="special"><span>特別感重視</span></label>
           </div>
 
           <div class="question">
-            <div class="question-title">🎯 Q2. どんな用途ですか？</div>
+            <div class="question-title">Q2. どんな用途ですか？</div>
             <label class="choice"><input type="radio" name="use" value="home"><span>自宅用</span></label>
             <label class="choice"><input type="radio" name="use" value="gift"><span>贈答用</span></label>
             <label class="choice"><input type="radio" name="use" value="rare"><span>珍しいものを試したい</span></label>
           </div>
 
           <div class="question">
-            <div class="question-title">⭐ Q3. 何を重視しますか？</div>
+            <div class="question-title">Q3. 何を重視しますか？</div>
             <label class="choice"><input type="radio" name="priority" value="easy"><span>食べやすさ</span></label>
             <label class="choice"><input type="radio" name="priority" value="size"><span>粒の大きさ</span></label>
             <label class="choice"><input type="radio" name="priority" value="special"><span>希少性</span></label>
@@ -475,58 +131,58 @@
         </div>
       </section>
 
-      <!-- 2: 結果 -->
       <section id="screen-result" class="screen">
         <div class="card result-box">
           <img id="resultPhoto" class="fruit-photo" src="" alt="品種画像">
-          <div class="lead" style="margin-bottom:4px;">🍒 あなたにおすすめの品種は</div>
+          <div class="lead" style="margin-bottom:4px;">あなたにおすすめの品種は</div>
           <div id="resultName" class="result-name">佐藤錦</div>
           <p id="resultCopy" class="lead"></p>
           <div id="resultTags" class="tags"></div>
         </div>
 
         <div class="card">
-          <h2 class="section-title">💡 品種紹介</h2>
+          <h2 class="section-title">品種紹介</h2>
           <p id="resultDesc" class="lead"></p>
         </div>
 
         <div class="card">
-          <h2 class="section-title">❤️ こんな方におすすめ</h2>
+          <h2 class="section-title">こんな方におすすめ</h2>
           <p id="resultRecommend" class="lead"></p>
         </div>
 
         <div class="btn-row">
-          <button id="toStoresBtn" class="btn-primary" type="button">この品種を買える店舗を見る</button>
+          <button id="toStoresBtn" class="btn-primary" type="button">この品種を買いたい方</button>
           <button id="backSurveyBtn" class="btn-outline" type="button">アンケートに戻る</button>
         </div>
       </section>
 
-      <!-- 3: 店舗 -->
       <section id="screen-stores" class="screen">
         <div class="card">
-          <h2 id="storesTitle" class="section-title">🛍️ 店舗一覧</h2>
+          <h2 id="storesTitle" class="section-title">この品種を買いたい方</h2>
           <p id="storesSubtitle" class="lead"></p>
         </div>
 
-        <div id="storesArea"></div>
-
         <div class="card">
-          <h2 class="section-title">🎁 ふるさと納税のおすすめ</h2>
-          <p class="lead">店舗購入とは別に、返礼品として応援いただける導線です。</p>
+          <h2 class="section-title">ふるさと納税のおすすめ</h2>
+          <p class="lead">楽天ふるさと納税とふるさとチョイスの検索ページを掲載しています。</p>
         </div>
-
         <div id="taxArea"></div>
 
+        <div class="card">
+          <h2 class="section-title">店舗の情報</h2>
+          <p class="lead">マップと観光協会のパンフレットページから、現地の店舗情報をご確認いただけます。</p>
+        </div>
+        <div id="storesArea"></div>
+
         <div class="btn-row">
-          <button id="toVarietiesBtn" class="btn-secondary" type="button">🔎 他の品種を見る</button>
+          <button id="toVarietiesBtn" class="btn-secondary" type="button">他の品種を見る</button>
           <button id="backResultBtn" class="btn-outline" type="button">品種紹介に戻る</button>
         </div>
       </section>
 
-      <!-- 4: 他品種 -->
       <section id="screen-varieties" class="screen">
         <div class="card">
-          <h2 class="section-title">🔎 他の品種を選ぶ</h2>
+          <h2 class="section-title">他の品種を選ぶ</h2>
           <p class="lead">比較して見たい品種を選んでください。</p>
         </div>
 
@@ -538,15 +194,13 @@
         </div>
 
         <div class="page-note">
-          ※ 画像は `images` フォルダのファイルを参照します。  
-          画像が見つからない場合は自動でプレースホルダー画像を表示します。
+          ※ 画像は <code>images</code> フォルダのファイルを参照します。画像が見つからない場合は自動でプレースホルダー画像を表示します。
         </div>
       </section>
     </div>
   </div>
 
   <script>
-    // 画像が見つからない時のプレースホルダー
     const defaultPhotoSvg =
       "data:image/svg+xml;charset=UTF-8," +
       encodeURIComponent(`
@@ -573,51 +227,80 @@
         </svg>
       `);
 
+    const storeMapUrl = "https://www.niki-kanko.jp/common/img/brochure/niki_pam_2026_JP_MAPonly.pdf";
+    const brochureUrl = "https://www.niki-kanko.jp/brochure/";
+
     const varieties = {
       satonishiki: {
         name: "佐藤錦",
         photo: "images/satonishiki.jpg",
         copy: "定番人気で、甘さと酸味のバランスが魅力です。",
-        desc: "初めての人にもおすすめしやすい代表品種です。",
-        recommend: "定番感や食べやすさを重視する方におすすめです。",
-        tags: ["⭐ 定番", "🍒 バランス", "🏠 自宅向け"],
-        stores: [
-          { icon: "🛍️", title: "まちの直売所", desc: "地元の農産物や加工品を揃える定番スポット。", open: true, distance: "徒歩8分" },
-          { icon: "🏡", title: "さくらんぼ農園おみやげ館", desc: "農園直送のさくらんぼを販売する店舗です。", open: true, distance: "車で10分" },
-          { icon: "📍", title: "観光案内所併設マルシェ", desc: "観光案内と合わせて旬の果実を販売しています。", open: false, distance: "徒歩5分" }
-        ],
+        desc: "初めての方にもおすすめしやすい代表品種。仁木町のさくらんぼを知る入口として最適です。",
+        recommend: "定番感や食べやすさを重視する方、ご家庭用にも贈答用にも安心して選びたい方におすすめです。",
+        tags: ["定番", "バランス", "自宅向け"],
         taxes: [
-          { icon: "🎁", title: "佐藤錦 旬の詰め合わせ", desc: "定番人気の佐藤錦を楽しめる返礼品です。家庭用にも贈答用にもおすすめです。" }
+          {
+            icon: "楽",
+            provider: "楽天ふるさと納税",
+            title: "佐藤錦（楽天ふるさと納税）",
+            desc: "仁木町×佐藤錦の返礼品を楽天ふるさと納税で検索できます。",
+            url: "https://search.rakuten.co.jp/search/mall/%22%E4%BD%90%E8%97%A4%E9%8C%A6%22/100246/?sid=370996"
+          },
+          {
+            icon: "CH",
+            provider: "ふるさとチョイス",
+            title: "佐藤錦（ふるさとチョイス）",
+            desc: "仁木町×佐藤錦の返礼品をふるさとチョイスで検索できます。",
+            url: "https://www.furusato-tax.jp/search?q=%E4%BB%81%E6%9C%A8%E7%94%BA%E3%80%80%E4%BD%90%E8%97%A4%E9%8C%A6&header=1&target=1"
+          }
         ]
       },
       benishuho: {
         name: "紅秀峰",
         photo: "images/benishuho.jpg",
-        copy: "大粒で見栄えが良く、贈答にも向きます。",
-        desc: "しっかりした果肉で満足感の高い品種です。",
-        recommend: "見栄えや贈答用の華やかさを重視する方におすすめです。",
-        tags: ["🎀 ギフト向け", "🍒 大粒", "✨ 見栄え"],
-        stores: [
-          { icon: "🛍️", title: "まちの直売所", desc: "地元の農産物や加工品を揃える定番スポット。", open: true, distance: "徒歩8分" },
-          { icon: "🎁", title: "果実セレクトショップ", desc: "贈答用・お土産向けの果実販売に強い店舗です。", open: true, distance: "車で15分" }
-        ],
+        copy: "大粒で見栄えが良く、贈答にも向く人気品種です。",
+        desc: "しっかりした果肉で満足感があり、見栄えを重視したい方に選ばれやすい品種です。",
+        recommend: "贈り物やお土産、見た目の華やかさや大粒感を重視したい方におすすめです。",
+        tags: ["ギフト向け", "大粒", "見栄え"],
         taxes: [
-          { icon: "🎁", title: "紅秀峰 大粒ギフトボックス", desc: "見栄えの良い大粒品種を中心にした贈答向け返礼品です。" }
+          {
+            icon: "楽",
+            provider: "楽天ふるさと納税",
+            title: "紅秀峰（楽天ふるさと納税）",
+            desc: "仁木町×紅秀峰の返礼品を楽天ふるさと納税で検索できます。",
+            url: "https://search.rakuten.co.jp/search/mall/%22%E7%B4%85%E7%A7%80%E5%B3%B0%22/100246/?sid=370996"
+          },
+          {
+            icon: "CH",
+            provider: "ふるさとチョイス",
+            title: "紅秀峰（ふるさとチョイス）",
+            desc: "仁木町×紅秀峰の返礼品をふるさとチョイスで検索できます。",
+            url: "https://www.furusato-tax.jp/search?q=%E4%BB%81%E6%9C%A8%E7%94%BA%E3%80%80%E7%B4%85%E7%A7%80%E5%B3%B0&header=1&target=1"
+          }
         ]
       },
-      gassannishiki: {
-        name: "月山錦",
-        photo: "images/gassannishiki.jpg",
-        copy: "希少性が高く、特別感を楽しめる品種です。",
-        desc: "珍しい品種を試したい方に向いています。",
-        recommend: "希少性や話題性を重視する方におすすめです。",
-        tags: ["🌟 希少", "👀 話題性", "💎 特別感"],
-        stores: [
-          { icon: "🏡", title: "さくらんぼ農園おみやげ館", desc: "農園直送のさくらんぼを販売する店舗です。", open: true, distance: "車で10分" },
-          { icon: "🎁", title: "果実セレクトショップ", desc: "贈答用・お土産向けの果実販売に強い店舗です。", open: true, distance: "車で15分" }
-        ],
+      nanyo: {
+        name: "南陽",
+        photo: "images/nanyo.jpg",
+        copy: "やわらかな果肉と存在感のある大粒感が魅力の品種です。",
+        desc: "大粒で食べごたえがあり、やさしい甘さと存在感のある果実を楽しみたい方に向く品種です。",
+        recommend: "希少性や大粒感を楽しみたい方、少し特別感のある品種を選びたい方におすすめです。",
+        tags: ["希少感", "大粒", "特別感"],
         taxes: [
-          { icon: "🎁", title: "希少品種 月山錦 食べ比べセット", desc: "特別感のある希少品種を楽しめる返礼品です。話題性も高い構成です。" }
+          {
+            icon: "楽",
+            provider: "楽天ふるさと納税",
+            title: "南陽（楽天ふるさと納税）",
+            desc: "仁木町×南陽の返礼品を楽天ふるさと納税で検索できます。",
+            url: "https://search.rakuten.co.jp/search/mall/%22%E5%8D%97%E9%99%BD%22/100246/?sid=370996"
+          },
+          {
+            icon: "CH",
+            provider: "ふるさとチョイス",
+            title: "南陽（ふるさとチョイス）",
+            desc: "仁木町×南陽の返礼品をふるさとチョイスで検索できます。",
+            url: "https://www.furusato-tax.jp/search?q=%E4%BB%81%E6%9C%A8%E7%94%BA%E3%80%80%E5%8D%97%E9%99%BD&header=1&target=1"
+          }
         ]
       }
     };
@@ -631,13 +314,17 @@
     const errorBox = document.getElementById("errorBox");
 
     function showScreen(target) {
-      [surveyScreen, resultScreen, storesScreen, varietiesScreen].forEach(s => s.classList.remove("active"));
+      [surveyScreen, resultScreen, storesScreen, varietiesScreen].forEach(function(s) {
+        s.classList.remove("active");
+      });
       target.classList.add("active");
       window.scrollTo(0, 0);
     }
 
     function resetSurvey() {
-      document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+      document.querySelectorAll('input[type="radio"]').forEach(function(r) {
+        r.checked = false;
+      });
       errorBox.style.display = "none";
     }
 
@@ -647,9 +334,8 @@
       const priority = document.querySelector('input[name="priority"]:checked');
 
       if (!taste || !use || !priority) return null;
-
       if (taste.value === "sweet" && use.value === "gift") return "benishuho";
-      if (taste.value === "special" || use.value === "rare" || priority.value === "special") return "gassannishiki";
+      if (taste.value === "special" || use.value === "rare" || priority.value === "special") return "nanyo";
       return "satonishiki";
     }
 
@@ -659,72 +345,94 @@
       document.getElementById("resultCopy").textContent = v.copy;
       document.getElementById("resultDesc").textContent = v.desc;
       document.getElementById("resultRecommend").textContent = v.recommend;
-      document.getElementById("resultTags").innerHTML = v.tags.map(tag => `<span>${tag}</span>`).join("");
+      document.getElementById("resultTags").innerHTML = v.tags.map(function(tag) {
+        return '<span>' + tag + '</span>';
+      }).join('');
 
       const img = document.getElementById("resultPhoto");
-      img.onerror = function() {
-        this.onerror = null;
-        this.src = defaultPhotoSvg;
-      };
-      img.src = v.photo;
-      img.alt = v.name;
+      if (img) {
+        img.onerror = function() {
+          this.onerror = null;
+          this.src = defaultPhotoSvg;
+        };
+        img.src = v.photo;
+        img.alt = v.name;
+      }
     }
 
     function renderStoresAndTax(key) {
       const v = varieties[key];
-      document.getElementById("storesTitle").textContent = `🛍️ ${v.name}を買える店舗`;
-      document.getElementById("storesSubtitle").textContent = `おすすめされた「${v.name}」を取り扱っている店舗一覧です。`;
+      document.getElementById("storesTitle").textContent = v.name + "を買いたい方";
+      document.getElementById("storesSubtitle").textContent =
+        "「" + v.name + "」を購入したい方向けに、ふるさと納税と店舗情報を掲載しています。";
 
-      const storesHtml = v.stores.map(store => `
-        <div class="card-list-item">
-          <div class="item-head">
-            <div class="icon-badge">${store.icon}</div>
-            <div>
-              <div class="item-title">${store.title}</div>
-              <p class="item-desc">${store.desc}</p>
+      const taxesHtml = v.taxes.map(function(item) {
+        return `
+          <div class="card-list-item">
+            <div class="item-head">
+              <div class="icon-badge red">${item.icon}</div>
+              <div>
+                <div class="item-title">${item.provider}</div>
+                <p class="item-desc">${item.desc}</p>
+              </div>
+            </div>
+            <div class="link-stack">
+              <a class="link-btn btn-soft-red" href="${item.url}" target="_blank" rel="noopener noreferrer">
+                ${item.title}を開く
+              </a>
             </div>
           </div>
-          <div class="meta">
-            <span class="${store.open ? 'open' : ''}">${store.open ? '営業中' : '営業時間外'}</span>
-            <span>${store.distance}</span>
-            <span>${v.name} 取扱い</span>
-          </div>
-          <button type="button" class="btn-soft-green" style="width:100%;">📍 店舗ページを見る（ダミー）</button>
-        </div>
-      `).join("");
+        `;
+      }).join("");
 
-      const taxesHtml = v.taxes.map(item => `
+      const storesHtml = `
         <div class="card-list-item">
           <div class="item-head">
-            <div class="icon-badge red">${item.icon}</div>
+            <div class="icon-badge">MAP</div>
             <div>
-              <div class="item-title">${item.title}</div>
-              <p class="item-desc">${item.desc}</p>
+              <div class="item-title">仁木町観光マップ（PDF）</div>
+              <p class="item-desc">観光農園、直売所、食事、買い物、宿泊、ワイナリーなどを掲載した観光マップです。</p>
             </div>
           </div>
-          <button type="button" class="btn-soft-red" style="width:100%; margin-top:10px;">🎁 ふるさと納税ページを見る（ダミー）</button>
+          <div class="link-stack">
+            <a class="link-btn btn-soft-green" href="${storeMapUrl}" target="_blank" rel="noopener noreferrer">観光マップを開く</a>
+          </div>
         </div>
-      `).join("");
+        <div class="card-list-item">
+          <div class="item-head">
+            <div class="icon-badge">HP</div>
+            <div>
+              <div class="item-title">仁木町観光協会 パンフレットページ</div>
+              <p class="item-desc">公式パンフレットや観光マップのダウンロードページです。店舗・観光情報の確認に利用できます。</p>
+            </div>
+          </div>
+          <div class="link-stack">
+            <a class="link-btn btn-soft-green" href="${brochureUrl}" target="_blank" rel="noopener noreferrer">観光協会ページを開く</a>
+          </div>
+        </div>
+      `;
 
-      document.getElementById("storesArea").innerHTML = storesHtml;
       document.getElementById("taxArea").innerHTML = taxesHtml;
+      document.getElementById("storesArea").innerHTML = storesHtml;
     }
 
     function renderVarietiesPage(currentKey) {
       const html = Object.keys(varieties)
-        .filter(key => key !== currentKey)
-        .map(key => {
+        .filter(function(key) { return key !== currentKey; })
+        .map(function(key) {
           const v = varieties[key];
           return `
             <div class="card-list-item">
               <div class="item-head">
-                <img
-                  class="fruit-thumb"
-                  src="${v.photo}"
-                  alt="${v.name}"
-                  onerror="this.onerror=null; this.src=window.defaultPhotoSvg;"
-               utton type="button" class="btn-outline variety-result-btn" data-key="${key}">品種紹介を見る</button>
-                <button type="button" class="btn-primary variety-stores-btn" data-key="${key}">この品種の店舗を見る</button>
+                <img class="fruit-thumb" src="${v.photo}" alt="${v.name}" onerror="this.onerror=null; this.src=window.defaultPhotoSvg;" />
+                <div>
+                  <div class="item-title">${v.name}</div>
+                  <p class="item-desc">${v.copy}</p>
+                </div>
+              </div>
+              <div class="btn-row" style="margin-top:12px;">
+                <button type="button" class="btn-outline variety-result-btn" data-key="${key}">品種紹介を見る</button>
+                <button type="button" class="btn-primary variety-stores-btn" data-key="${key}">この品種を買いたい方</button>
               </div>
             </div>
           `;
@@ -732,7 +440,7 @@
 
       document.getElementById("varietiesArea").innerHTML = html;
 
-      document.querySelectorAll(".variety-result-btn").forEach(btn => {
+      document.querySelectorAll(".variety-result-btn").forEach(function(btn) {
         btn.addEventListener("click", function() {
           const key = this.getAttribute("data-key");
           currentVarietyKey = key;
@@ -741,7 +449,7 @@
         });
       });
 
-      document.querySelectorAll(".variety-stores-btn").forEach(btn => {
+      document.querySelectorAll(".variety-stores-btn").forEach(function(btn) {
         btn.addEventListener("click", function() {
           const key = this.getAttribute("data-key");
           currentVarietyKey = key;
@@ -753,48 +461,51 @@
 
     window.defaultPhotoSvg = defaultPhotoSvg;
 
-    document.getElementById("diagnoseBtn").addEventListener("click", function() {
-      const key = decideVariety();
-      if (!key) {
-        errorBox.style.display = "block";
-        return;
-      }
-      errorBox.style.display = "none";
-      currentVarietyKey = key;
-      renderResult(key);
-      showScreen(resultScreen);
-    });
+    document.addEventListener("DOMContentLoaded", function() {
+      document.getElementById("diagnoseBtn").addEventListener("click", function() {
+        const key = decideVariety();
+        if (!key) {
+          errorBox.style.display = "block";
+          return;
+        }
+        errorBox.style.display = "none";
+        currentVarietyKey = key;
+        renderResult(key);
+        showScreen(resultScreen);
+      });
 
-    document.getElementById("resetBtn").addEventListener("click", function() {
-      resetSurvey();
-    });
+      document.getElementById("resetBtn").addEventListener("click", function() {
+        resetSurvey();
+      });
 
-    document.getElementById("toStoresBtn").addEventListener("click", function() {
-      if (!currentVarietyKey) return;
-      renderStoresAndTax(currentVarietyKey);
-      showScreen(storesScreen);
-    });
+      document.getElementById("toStoresBtn").addEventListener("click", function() {
+        if (!currentVarietyKey) return;
+        renderStoresAndTax(currentVarietyKey);
+        showScreen(storesScreen);
+      });
 
-    document.getElementById("backSurveyBtn").addEventListener("click", function() {
-      showScreen(surveyScreen);
-    });
+      document.getElementById("backSurveyBtn").addEventListener("click", function() {
+        showScreen(surveyScreen);
+      });
 
-    document.getElementById("backResultBtn").addEventListener("click", function() {
-      showScreen(resultScreen);
-    });
+      document.getElementById("backResultBtn").addEventListener("click", function() {
+        showScreen(resultScreen);
+      });
 
-    document.getElementById("toVarietiesBtn").addEventListener("click", function() {
-      if (!currentVarietyKey) return;
-      renderVarietiesPage(currentVarietyKey);
-      showScreen(varietiesScreen);
-    });
+      document.getElementById("toVarietiesBtn").addEventListener("click", function() {
+        if (!currentVarietyKey) return;
+        renderVarietiesPage(currentVarietyKey);
+        showScreen(varietiesScreen);
+      });
 
-    document.getElementById("backStoresBtn").addEventListener("click", function() {
-      showScreen(storesScreen);
-    });
+      document.getElementById("backStoresBtn").addEventListener("click", function() {
+        showScreen(storesScreen);
+      });
 
-    document.getElementById("restartBtn").addEventListener("click", function() {
-      showScreen(surveyScreen);
+      document.getElementById("restartBtn").addEventListener("click", function() {
+        showScreen(surveyScreen);
+        resetSurvey();
+      });
     });
   </script>
 </body>
