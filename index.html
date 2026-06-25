@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>おすすめさくらんぼ診断（完成版）</title>
+  <title>おすすめさくらんぼ診断（アンケート更新版）</title>
 
   <!-- GA4設定: ご自身の測定IDに置き換えてください -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
@@ -30,9 +30,8 @@
       --subtext: #666666;
       --line: #E7DEDA;
       --shadow: 0 14px 34px rgba(181,67,102,0.10), 0 10px 22px rgba(63,175,145,0.08);
-      --radius-xl: 28px;
-      --radius-lg: 22px;
     }
+
     * { box-sizing: border-box; }
     body {
       margin: 0;
@@ -43,6 +42,7 @@
         radial-gradient(circle at top left, rgba(63,175,145,0.10), transparent 24%),
         linear-gradient(180deg, #FFF7FA 0px, #F4FBF8 230px, var(--ivory) 430px);
     }
+
     .app { max-width: 440px; margin: 0 auto; min-height: 100vh; }
     .header {
       position: sticky; top: 0; z-index: 20; padding: 14px 16px 12px;
@@ -78,13 +78,13 @@
     .section-title { margin: 0 0 10px; font-size: 18px; font-weight: 900; color: var(--mint-dark); display: flex; align-items: center; gap: 8px; }
     .lead { color: var(--subtext); font-size: 13px; line-height: 1.85; margin: 0 0 12px; }
     .question { margin-bottom: 18px; }
-    .question-title { font-size: 15px; font-weight: 900; margin-bottom: 10px; color: var(--mint-dark); }
+    .question-title { font-size: 15px; font-weight: 900; margin-bottom: 10px; color: var(--mint-dark); line-height: 1.7; }
     .choice {
-      display: flex; align-items: center; gap: 10px; margin-bottom: 8px; padding: 12px 13px;
+      display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; padding: 12px 13px;
       background: #FFFDFE; border: 1px solid var(--line); border-radius: 16px; cursor: pointer;
     }
-    .choice input { accent-color: var(--berry); transform: scale(1.08); }
-    .choice span { font-size: 14px; line-height: 1.6; font-weight: 600; }
+    .choice input { accent-color: var(--berry); transform: scale(1.08); margin-top: 3px; }
+    .choice span { font-size: 14px; line-height: 1.7; font-weight: 600; }
 
     .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
     button, a.link-btn {
@@ -95,19 +95,15 @@
     .btn-primary { background: linear-gradient(135deg, var(--berry), #EE8EA8); color: white; }
     .btn-secondary { background: linear-gradient(135deg, var(--mint), #70D0B5); color: white; }
     .btn-outline { background: white; border: 1px solid var(--line); color: var(--mint-dark); }
-
     .btn-soft-green {
-      background: linear-gradient(135deg, var(--mint), #70D0B5);
-      color: #ffffff; border: 1px solid rgba(46,140,115,0.28); width: 100%; margin-top: 10px;
-      box-shadow: 0 8px 18px rgba(63,175,145,0.18);
+      background: linear-gradient(135deg, var(--mint), #70D0B5); color: #ffffff;
+      border: 1px solid rgba(46,140,115,0.28); width: 100%; margin-top: 10px; box-shadow: 0 8px 18px rgba(63,175,145,0.18);
     }
     .btn-soft-red {
-      background: linear-gradient(135deg, var(--berry), #EE8EA8);
-      color: #ffffff; border: 1px solid rgba(181,67,102,0.24); width: 100%;
-      box-shadow: 0 8px 18px rgba(216,90,123,0.18);
+      background: linear-gradient(135deg, var(--berry), #EE8EA8); color: #ffffff;
+      border: 1px solid rgba(181,67,102,0.24); width: 100%; box-shadow: 0 8px 18px rgba(216,90,123,0.18);
     }
     .link-btn::after { content: ' ↗'; font-size: 14px; font-weight: 900; margin-left: 6px; }
-    .link-btn { letter-spacing: 0.01em; }
 
     .error {
       display: none; background: var(--berry-light); color: var(--berry-dark); border: 1px solid var(--berry-soft);
@@ -118,8 +114,7 @@
     .result-name { font-size: 25px; font-weight: 900; color: var(--berry); margin: 8px 0; }
     .fruit-photo, .purchase-hero-photo {
       width: 100%; object-fit: cover; border-radius: 18px; display: block;
-      box-shadow: 0 8px 20px rgba(216,90,123,0.14);
-      background: linear-gradient(135deg, #FFF2F6, #F2FCF8);
+      box-shadow: 0 8px 20px rgba(216,90,123,0.14); background: linear-gradient(135deg, #FFF2F6, #F2FCF8);
     }
     .fruit-photo { height: 220px; margin-bottom: 14px; }
     .purchase-hero-photo { height: 190px; margin-top: 12px; }
@@ -155,13 +150,7 @@
     .season-table-wrap { margin-top: 10px; overflow-x: auto; }
     .season-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; }
     .season-table th, .season-table td { padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: middle; }
-    .season-table th {
-      text-align: left; color: var(--mint-dark); background: linear-gradient(135deg, #F7FFFC, #EFFAF6); font-weight: 900;
-    }
-    .season-table tr:first-child th:first-child { border-top-left-radius: 14px; }
-    .season-table tr:first-child th:last-child { border-top-right-radius: 14px; }
-    .season-table tr:last-child td:first-child { border-bottom-left-radius: 14px; }
-    .season-table tr:last-child td:last-child { border-bottom-right-radius: 14px; }
+    .season-table th { text-align: left; color: var(--mint-dark); background: linear-gradient(135deg, #F7FFFC, #EFFAF6); font-weight: 900; }
     .season-current td { background: linear-gradient(135deg, #FFF4F8, #FFF8FA); font-weight: 900; }
     .season-pill {
       display: inline-block; padding: 4px 8px; border-radius: 999px; font-size: 12px; font-weight: 900;
@@ -173,14 +162,11 @@
   <div class="app">
     <div class="header">
       <div class="badge">
-        <svg class="svg-ico" viewBox="0 0 64 64" aria-hidden="true">
+        <svg width="28" height="28" viewBox="0 0 64 64" aria-hidden="true">
           <path d="M39 10 C34 16 31 23 30 30" fill="none" stroke="#3FAF91" stroke-width="3.2" stroke-linecap="round"/>
           <path d="M22 12 C28 14 32 18 34 24" fill="none" stroke="#3FAF91" stroke-width="3.2" stroke-linecap="round"/>
           <path d="M18 10 C22 5 29 5 35 9 C29 11 23 12 18 10Z" fill="#CFEFE2"/>
-          <circle cx="23" cy="38" r="8.5" fill="#D85A7B"/>
-          <circle cx="39" cy="40" r="8" fill="#F3A5B8"/>
-          <circle cx="20" cy="35" r="2" fill="#fff" opacity="0.65"/>
-          <circle cx="36" cy="36" r="2" fill="#fff" opacity="0.65"/>
+          <circle cx="23" cy="38" r="8.5" fill="#D85A7B"/><circle cx="39" cy="40" r="8" fill="#F3A5B8"/>
         </svg>
         <span>Cherry Select</span>
       </div>
@@ -194,10 +180,10 @@
           <div class="hero-row">
             <div>
               <h2>3つの質問でぴったりの品種を診断</h2>
-              <p>味の好み・用途・重視ポイントに合わせて、あなたに合うさくらんぼをご案内します。</p>
+              <p>魅力・酸味の好み・価格感から、あなたに合うさくらんぼをご案内します。</p>
             </div>
             <div class="hero-ico" aria-hidden="true">
-              <svg class="svg-ico big" viewBox="0 0 96 96">
+              <svg width="82" height="82" viewBox="0 0 96 96">
                 <defs>
                   <linearGradient id="heroCherry1" x1="0" x2="1"><stop offset="0%" stop-color="#D85A7B"/><stop offset="100%" stop-color="#F08AA3"/></linearGradient>
                   <linearGradient id="heroCherry2" x1="0" x2="1"><stop offset="0%" stop-color="#E57495"/><stop offset="100%" stop-color="#F7AFC1"/></linearGradient>
@@ -208,10 +194,6 @@
                 <path d="M24 17 C31 10 43 10 52 15 C42 19 33 20 24 17Z" fill="url(#heroLeaf)"/>
                 <circle cx="34" cy="60" r="15" fill="url(#heroCherry1)"/>
                 <circle cx="60" cy="64" r="14" fill="url(#heroCherry2)"/>
-                <circle cx="29" cy="54" r="3" fill="#ffffff" opacity="0.55"/>
-                <circle cx="55" cy="58" r="3" fill="#ffffff" opacity="0.55"/>
-                <path d="M14 70 C22 63 30 63 39 70" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
-                <path d="M55 76 C63 69 71 69 80 76" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
               </svg>
             </div>
           </div>
@@ -219,23 +201,26 @@
 
         <div class="card">
           <div class="question">
-            <div class="question-title">Q1. どんな味が好みですか？</div>
-            <label class="choice"><input type="radio" name="taste" value="sweet"><span>甘さ重視</span></label>
-            <label class="choice"><input type="radio" name="taste" value="balance"><span>バランス重視</span></label>
-            <label class="choice"><input type="radio" name="taste" value="special"><span>特別感重視</span></label>
+            <div class="question-title">Q1. どんな魅力のさくらんぼを選びたいですか？</div>
+            <label class="choice"><input type="radio" name="appeal" value="satonishiki"><span>定番で、甘さと酸味のバランスがよいもの</span></label>
+            <label class="choice"><input type="radio" name="appeal" value="benishuho"><span>甘みがしっかりしていて、大粒で華やかなもの</span></label>
+            <label class="choice"><input type="radio" name="appeal" value="nanyo"><span>少し珍しく、特別感や存在感のあるもの</span></label>
           </div>
+
           <div class="question">
-            <div class="question-title">Q2. どんな用途ですか？</div>
-            <label class="choice"><input type="radio" name="use" value="home"><span>自宅用</span></label>
-            <label class="choice"><input type="radio" name="use" value="gift"><span>贈答用</span></label>
-            <label class="choice"><input type="radio" name="use" value="rare"><span>珍しいものを試したい</span></label>
+            <div class="question-title">Q2. 酸味の好みを教えてください。</div>
+            <label class="choice"><input type="radio" name="acidity" value="satonishiki"><span>少し酸味があっても良い（バランスが好き）</span></label>
+            <label class="choice"><input type="radio" name="acidity" value="benishuho"><span>できるだけ甘い方がいい</span></label>
+            <label class="choice"><input type="radio" name="acidity" value="nanyo"><span>味の個性があれば気にならない</span></label>
           </div>
+
           <div class="question">
-            <div class="question-title">Q3. 何を重視しますか？</div>
-            <label class="choice"><input type="radio" name="priority" value="easy"><span>食べやすさ</span></label>
-            <label class="choice"><input type="radio" name="priority" value="size"><span>粒の大きさ</span></label>
-            <label class="choice"><input type="radio" name="priority" value="special"><span>希少性</span></label>
+            <div class="question-title">Q3. 価格についての考え方は？</div>
+            <label class="choice"><input type="radio" name="price" value="satonishiki"><span>コスパ重視</span></label>
+            <label class="choice"><input type="radio" name="price" value="benishuho"><span>見栄え・満足感とのバランス</span></label>
+            <label class="choice"><input type="radio" name="price" value="nanyo"><span>高くても特別な価値</span></label>
           </div>
+
           <div id="errorBox" class="error">すべての質問に答えてください。</div>
           <div class="btn-row">
             <button id="diagnoseBtn" class="btn-primary" type="button">診断する</button>
@@ -259,8 +244,8 @@
         </div>
 
         <div class="card">
-          <h2 class="section-title"><span class="icon-badge red" style="width:40px;min-width:40px;height:40px;">FOR</span>こんな方におすすめ</h2>
-          <p id="resultRecommend" class="lead"></p>
+          <h2 class="section-title"><span class="icon-badge red" style="width:40px;min-width:40px;height:40px;">WHY</span>おすすめ理由</h2>
+          <p id="resultReason" class="lead"></p>
         </div>
 
         <div class="btn-row">
@@ -282,12 +267,12 @@
         </div>
 
         <div class="card">
-          <h2 class="section-title"><span class="icon-badge red" style="width:40px;min-width:40px;height:40px;">旬</span>"旬"な時期</h2>
+          <h2 class="section-title"><span class="icon-badge red" style="width:40px;min-width:40px;height:40px;">旬</span>旬な時期</h2>
           <p class="lead">各品種の目安時期です。選択中の品種を強調表示しています。</p>
           <div class="season-table-wrap">
             <table class="season-table" aria-label="旬な時期一覧">
               <thead>
-                <tr><th>品種</th><th>"旬"な時期</th><th>メモ</th></tr>
+                <tr><th>品種</th><th>旬な時期</th><th>メモ</th></tr>
               </thead>
               <tbody id="seasonTableBody"></tbody>
             </table>
@@ -336,7 +321,7 @@
 
     const seasonInfo = {
       satonishiki: { label: '佐藤錦', period: '6月下旬～7月中旬', note: '定番・甘みと酸味のバランス' },
-      benishuho: { label: '紅秀峰', period: '7月中旬～7月下旬', note: '大粒・甘みが強め' },
+      benishuho: { label: '紅秀峰', period: '7月上旬～7月下旬', note: '大粒・甘みが強め' },
       nanyo: { label: '南陽', period: '7月中旬～7月下旬', note: '大粒・希少感あり' }
     };
 
@@ -346,7 +331,7 @@
         photo: 'images/satonishiki.jpg',
         copy: '定番人気で、甘さと酸味のバランスが魅力です。',
         desc: '初めての方にもおすすめしやすい代表品種。仁木町のさくらんぼを知る入口として最適です。',
-        recommend: '定番感や食べやすさを重視する方、ご家庭用にも贈答用にも安心して選びたい方におすすめです。',
+        reason: '定番感・バランス・コスパを重視する傾向があり、はじめて選ぶ方にもなじみやすい品種です。',
         tags: ['定番', 'バランス', '自宅向け'],
         taxes: [
           { icon: '楽', provider: '楽天ふるさと納税', title: '佐藤錦（楽天ふるさと納税）', desc: '仁木町×佐藤錦の返礼品を楽天ふるさと納税で検索できます。', url: 'https://search.rakuten.co.jp/search/mall/%22%E4%BD%90%E8%97%A4%E9%8C%A6%22/100246/?sid=370996' },
@@ -358,7 +343,7 @@
         photo: 'images/benishuho.jpg',
         copy: '大粒で見栄えが良く、贈答にも向く人気品種です。',
         desc: 'しっかりした果肉で満足感があり、見栄えを重視したい方に選ばれやすい品種です。',
-        recommend: '贈り物やお土産、見た目の華やかさや大粒感を重視したい方におすすめです。',
+        reason: '甘さ・華やかさ・満足感のバランスを重視する方に合いやすく、贈り物にも向く品種です。',
         tags: ['ギフト向け', '大粒', '見栄え'],
         taxes: [
           { icon: '楽', provider: '楽天ふるさと納税', title: '紅秀峰（楽天ふるさと納税）', desc: '仁木町×紅秀峰の返礼品を楽天ふるさと納税で検索できます。', url: 'https://search.rakuten.co.jp/search/mall/%22%E7%B4%85%E7%A7%80%E5%B3%B0%22/100246/?sid=370996' },
@@ -370,7 +355,7 @@
         photo: 'images/nanyo.jpg',
         copy: 'やわらかな果肉と存在感のある大粒感が魅力の品種です。',
         desc: '大粒で食べごたえがあり、やさしい甘さと存在感のある果実を楽しみたい方に向く品種です。',
-        recommend: '希少性や大粒感を楽しみたい方、少し特別感のある品種を選びたい方におすすめです。',
+        reason: '特別感・個性・希少価値を重視する傾向があり、少し通好みの選び方に合う品種です。',
         tags: ['希少感', '大粒', '特別感'],
         taxes: [
           { icon: '楽', provider: '楽天ふるさと納税', title: '南陽（楽天ふるさと納税）', desc: '仁木町×南陽の返礼品を楽天ふるさと納税で検索できます。', url: 'https://search.rakuten.co.jp/search/mall/%22%E5%8D%97%E9%99%BD%22/100246/?sid=370996' },
@@ -390,7 +375,7 @@
       [surveyScreen, resultScreen, storesScreen, varietiesScreen].forEach(function(s){ s.classList.remove('active'); });
       target.classList.add('active');
       if (screenName) trackEvent('screen_view_custom', { screen_name: screenName });
-      window.scrollTo(0,0);
+      window.scrollTo(0, 0);
     }
 
     function resetSurvey() {
@@ -400,13 +385,20 @@
     }
 
     function decideVariety() {
-      const taste = document.querySelector('input[name="taste"]:checked');
-      const use = document.querySelector('input[name="use"]:checked');
-      const priority = document.querySelector('input[name="priority"]:checked');
-      if (!taste || !use || !priority) return null;
-      if (taste.value === 'sweet' && use.value === 'gift') return 'benishuho';
-      if (taste.value === 'special' || use.value === 'rare' || priority.value === 'special') return 'nanyo';
-      return 'satonishiki';
+      const appeal = document.querySelector('input[name="appeal"]:checked');
+      const acidity = document.querySelector('input[name="acidity"]:checked');
+      const price = document.querySelector('input[name="price"]:checked');
+      if (!appeal || !acidity || !price) return null;
+
+      const scores = { satonishiki: 0, benishuho: 0, nanyo: 0 };
+      scores[appeal.value] += 1;
+      scores[acidity.value] += 1;
+      scores[price.value] += 1;
+
+      const maxScore = Math.max(scores.satonishiki, scores.benishuho, scores.nanyo);
+      const winners = Object.keys(scores).filter(function(k){ return scores[k] === maxScore; });
+      if (winners.length === 1) return winners[0];
+      return appeal.value; // 同点時はQ1優先
     }
 
     function renderResult(key) {
@@ -414,7 +406,7 @@
       document.getElementById('resultName').textContent = v.name;
       document.getElementById('resultCopy').textContent = v.copy;
       document.getElementById('resultDesc').textContent = v.desc;
-      document.getElementById('resultRecommend').textContent = v.recommend;
+      document.getElementById('resultReason').textContent = v.reason;
       document.getElementById('resultTags').innerHTML = v.tags.map(function(tag){ return '<span>' + tag + '</span>'; }).join('');
       const img = document.getElementById('resultPhoto');
       if (img) {
@@ -422,11 +414,11 @@
         img.src = v.photo;
         img.alt = v.name;
       }
-      trackEvent('diagnosis_result', { variety_key:key, variety_name:v.name });
+      trackEvent('diagnosis_result', { variety_key: key, variety_name: v.name });
     }
 
     function renderSeasonTable(currentKey) {
-      const rows = ['satonishiki', 'benishuho', 'nanyo'].map(function(k){
+      const rows = ['satonishiki','benishuho','nanyo'].map(function(k){
         const s = seasonInfo[k];
         const cls = k === currentKey ? ' class="season-current"' : '';
         const mark = k === currentKey ? ' <span class="season-pill">選択中</span>' : '';
@@ -439,12 +431,12 @@
     function bindTrackedLinks() {
       document.querySelectorAll('.tax-link').forEach(function(link){
         link.addEventListener('click', function(){
-          trackEvent('tax_link_click', { variety_name:this.dataset.variety, provider:this.dataset.provider, index_no:this.dataset.index });
+          trackEvent('tax_link_click', { variety_name: this.dataset.variety, provider: this.dataset.provider, index_no: this.dataset.index });
         });
       });
       document.querySelectorAll('.store-link').forEach(function(link){
         link.addEventListener('click', function(){
-          trackEvent('store_info_click', { variety_name:this.dataset.variety, link_type:this.dataset.linktype });
+          trackEvent('store_info_click', { variety_name: this.dataset.variety, link_type: this.dataset.linktype });
         });
       });
     }
@@ -470,7 +462,7 @@
       document.getElementById('taxArea').innerHTML = taxesHtml;
       document.getElementById('storesArea').innerHTML = storesHtml;
       bindTrackedLinks();
-      trackEvent('purchase_info_view', { variety_key:key, variety_name:v.name });
+      trackEvent('purchase_info_view', { variety_key: key, variety_name: v.name });
     }
 
     function renderVarietiesPage(currentKey) {
@@ -490,13 +482,13 @@
     window.defaultPhotoSvg = defaultPhotoSvg;
 
     document.addEventListener('DOMContentLoaded', function(){
-      trackEvent('screen_view_custom', { screen_name:'survey' });
+      trackEvent('screen_view_custom', { screen_name: 'survey' });
       document.getElementById('diagnoseBtn').addEventListener('click', function(){
         const key = decideVariety();
-        trackEvent('diagnose_click', { section:'survey' });
+        trackEvent('diagnose_click', { section: 'survey' });
         if (!key) {
           errorBox.style.display = 'block';
-          trackEvent('diagnose_validation_error', { reason:'unanswered' });
+          trackEvent('diagnose_validation_error', { reason: 'unanswered' });
           return;
         }
         errorBox.style.display = 'none';
