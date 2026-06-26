@@ -409,6 +409,23 @@
       };
     }
 
+    function sendDiagnosisLog(resultKey, q1, q2, q3) {
+      const varietyLabels = {
+        satonishiki: '佐藤錦',
+        benishuho: '紅秀峰',
+        nanyo: '南陽'
+      };
+      if (typeof gtag === 'function') {
+        gtag('event', 'cherry_diagnosis', {
+          result: resultKey,
+          result_name: varietyLabels[resultKey] || resultKey,
+          q1: q1,
+          q2: q2,
+          q3: q3
+        });
+      }
+    }
+
     function renderResult(key) {
       const v = varieties[key];
       document.getElementById('resultName').textContent = v.name;
@@ -437,24 +454,66 @@
 
     function bindTrackedLinks() {
       document.querySelectorAll('.tax-link').forEach(function(link){
-        link.addEventListener('click', function(){
-          trackEvent('tax_link_click', {
-            variety_name: this.dataset.variety,
-            provider: this.dataset.provider,
-            index_no: this.dataset.index,
-            destination_url: this.href,
-            transport_type: 'beacon'
-          });
+        link.addEventListener('click', function(e){
+          e.preventDefault();
+
+          const url = this.href;
+          const varietyName = this.dataset.variety;
+          const providerName = this.dataset.provider;
+          const indexNo = this.dataset.index;
+
+          const openedWindow = window.open('', '_blank');
+
+          if (typeof gtag === 'function') {
+            gtag('event', 'tax_link_click', {
+              variety_name: varietyName,
+              provider: providerName,
+              index_no: indexNo,
+              destination_url: url,
+              from_result: currentVarietyKey || '',
+              transport_type: 'beacon'
+            });
+          }
+
+          setTimeout(function(){
+            if (openedWindow) {
+              openedWindow.opener = null;
+              openedWindow.location.href = url;
+            } else {
+              window.location.href = url;
+            }
+          }, 250);
         });
       });
+
       document.querySelectorAll('.store-link').forEach(function(link){
-        link.addEventListener('click', function(){
-          trackEvent('store_link_click', {
-            variety_name: this.dataset.variety,
-            link_type: this.dataset.linktype,
-            destination_url: this.href,
-            transport_type: 'beacon'
-          });
+        link.addEventListener('click', function(e){
+          e.preventDefault();
+
+          const url = this.href;
+          const varietyName = this.dataset.variety;
+          const linkType = this.dataset.linktype;
+
+          const openedWindow = window.open('', '_blank');
+
+          if (typeof gtag === 'function') {
+            gtag('event', 'store_link_click', {
+              variety_name: varietyName,
+              link_type: linkType,
+              destination_url: url,
+              from_result: currentVarietyKey || '',
+              transport_type: 'beacon'
+            });
+          }
+
+          setTimeout(function(){
+            if (openedWindow) {
+              openedWindow.opener = null;
+              openedWindow.location.href = url;
+            } else {
+              window.location.href = url;
+            }
+          }, 250);
         });
       });
     }
@@ -524,24 +583,6 @@
       document.getElementById('restartBtn').addEventListener('click', function(){ showScreen(surveyScreen, 'survey'); resetSurvey(); });
     });
   </script>
-<script>
-function sendDiagnosisLog(resultKey, q1, q2, q3) {
-  const varietyLabels = {
-    satonishiki: '佐藤錦',
-    benishuho: '紅秀峰',
-    nanyo: '南陽'
-  };
-  if (typeof gtag === 'function') {
-    gtag('event', 'cherry_diagnosis', {
-      result: resultKey,
-      result_name: varietyLabels[resultKey] || resultKey,
-      q1: q1,
-      q2: q2,
-      q3: q3
-    });
-  }
-}
-</script>
   
 </body>
 </html>
