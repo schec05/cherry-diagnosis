@@ -390,6 +390,11 @@
       const price = document.querySelector('input[name="price"]:checked');
       if (!appeal || !acidity || !price) return null;
 
+      const key = decideVariety();
+      
+      // ここを追加
+      sendDiagnosisLog(key, appeal.value, acidity.value, price.value);
+
       const scores = { satonishiki: 0, benishuho: 0, nanyo: 0 };
       scores[appeal.value] += 1;
       scores[acidity.value] += 1;
@@ -505,5 +510,18 @@
       document.getElementById('restartBtn').addEventListener('click', function(){ showScreen(surveyScreen, 'survey'); resetSurvey(); });
     });
   </script>
+<script>
+function sendDiagnosisLog(resultKey, q1, q2, q3) {
+  if (typeof gtag === 'function') {
+    gtag('event', 'cherry_diagnosis', {
+      result: resultKey,
+      q1: q1,
+      q2: q2,
+      q3: q3
+    });
+  }
+}
+</script>
+  
 </body>
 </html>
