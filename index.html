@@ -390,11 +390,6 @@
       const price = document.querySelector('input[name="price"]:checked');
       if (!appeal || !acidity || !price) return null;
 
-      const key = decideVariety();
-      
-      // ここを追加
-      sendDiagnosisLog(key, appeal.value, acidity.value, price.value);
-
       const scores = { satonishiki: 0, benishuho: 0, nanyo: 0 };
       scores[appeal.value] += 1;
       scores[acidity.value] += 1;
@@ -404,6 +399,14 @@
       const winners = Object.keys(scores).filter(function(k){ return scores[k] === maxScore; });
       if (winners.length === 1) return winners[0];
       return appeal.value; // 同点時はQ1優先
+    }
+
+    function getSurveyAnswers() {
+      return {
+        q1: document.querySelector('input[name="appeal"]:checked')?.value || '',
+        q2: document.querySelector('input[name="acidity"]:checked')?.value || '',
+        q3: document.querySelector('input[name="price"]:checked')?.value || ''
+      };
     }
 
     function renderResult(key) {
@@ -419,7 +422,6 @@
         img.src = v.photo;
         img.alt = v.name;
       }
-      trackEvent('diagnosis_result', { variety_key: key, variety_name: v.name });
     }
 
     function renderSeasonTable(currentKey) {
@@ -436,12 +438,23 @@
     function bindTrackedLinks() {
       document.querySelectorAll('.tax-link').forEach(function(link){
         link.addEventListener('click', function(){
-          trackEvent('tax_link_click', { variety_name: this.dataset.variety, provider: this.dataset.provider, index_no: this.dataset.index });
+          trackEvent('tax_link_click', {
+            variety_name: this.dataset.variety,
+            provider: this.dataset.provider,
+            index_no: this.dataset.index,
+            destination_url: this.href,
+            transport_type: 'beacon'
+          });
         });
       });
       document.querySelectorAll('.store-link').forEach(function(link){
         link.addEventListener('click', function(){
-          trackEvent('store_info_click', { variety_name: this.dataset.variety, link_type: this.dataset.linktype });
+          trackEvent('store_link_click', {
+            variety_name: this.dataset.variety,
+            link_type: this.dataset.linktype,
+            destination_url: this.href,
+            transport_type: 'beacon'
+          });
         });
       });
     }
@@ -490,12 +503,13 @@
       trackEvent('screen_view_custom', { screen_name: 'survey' });
       document.getElementById('diagnoseBtn').addEventListener('click', function(){
         const key = decideVariety();
-        trackEvent('diagnose_click', { section: 'survey' });
         if (!key) {
           errorBox.style.display = 'block';
           trackEvent('diagnose_validation_error', { reason: 'unanswered' });
           return;
         }
+        const answers = getSurveyAnswers();
+        sendDiagnosisLog(key, answers.q1, answers.q2, answers.q3);
         errorBox.style.display = 'none';
         currentVarietyKey = key;
         renderResult(key);
@@ -512,9 +526,15 @@
   </script>
 <script>
 function sendDiagnosisLog(resultKey, q1, q2, q3) {
+  const varietyLabels = {
+    satonishiki: '佐藤錦',
+    benishuho: '紅秀峰',
+    nanyo: '南陽'
+  };
   if (typeof gtag === 'function') {
     gtag('event', 'cherry_diagnosis', {
       result: resultKey,
+      result_name: varietyLabels[resultKey] || resultKey,
       q1: q1,
       q2: q2,
       q3: q3
